@@ -14,7 +14,7 @@ interface HomeModel extends Model {
   reducers: {
     //action处理器,处理同步动作,用来计算一个最新的state
     add: Reducer<HomeState>;
-    multiply:Reducer<HomeState>;
+    multiply: Reducer<HomeState>;
     backZero: Reducer<HomeState>;
   };
   effects: {
@@ -48,32 +48,31 @@ const homeModel: HomeModel = {
         num: state.num + payload.num,
       };
     },
-    multiply(state = initialMultiplyState, {payload}){
+    multiply(state = initialMultiplyState, {payload}) {
       return {
         ...state,
         num: state.num * payload.num,
       };
     },
-    backZero(state = initialState, {payload}){
+    backZero(state = initialState) {
       return {
         ...state,
         num: 0,
       };
     },
-
   },
   effects: {
     *asyncAdd({payload}, {call, put}) {
-      yield call(delay,3000);
+      yield call(delay, 3000);
       yield put({
-        type:'add',
+        type: 'add',
         payload,
       });
     },
-    *asyncMultiply({payload}, {call, put}){
-      yield call(delay,5000);
+    *asyncMultiply({payload}, {call, put}) {
+      yield call(delay, 5000);
       yield put({
-        type:'multiply',
+        type: 'multiply',
         payload,
       });
     },

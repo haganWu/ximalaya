@@ -39,7 +39,7 @@ class Navigator extends React.Component {
         <Stack.Navigator
           headerMode="float"
           screenOptions={{
-            headerTitleAlign: 'left',
+            headerTitleAlign: 'center',
             headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureEnabled: true,

@@ -5,8 +5,9 @@ import Detail from './Detail';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 
-const mapStateToProps = ({home}: RootState) => ({
+const mapStateToProps = ({home, loading}: RootState) => ({
   num: home.num,
+  loading: loading.effects['home/asyncAdd'],
 });
 
 /**
@@ -47,7 +48,7 @@ class Home extends React.Component<IProps> {
       },
     });
   };
-  
+
   handleAsyncMultiply = () => {
     const {dispatch} = this.props;
     dispatch({
@@ -69,15 +70,37 @@ class Home extends React.Component<IProps> {
   };
 
   render() {
-    const {num} = this.props;
+    const {num, loading} = this.props;
+
     return (
       <View>
-        <Text>Home Page add result:{num}</Text>
-        <Button title="跳转到详情页" onPress={this.onPress} />
-        <Button title="+" onPress={this.handleAdd} />
-        <Button title="异步+" onPress={this.handleAsyncAdd} />
-        <Button title="异步*" onPress={this.handleAsyncMultiply} />
-        <Button title="归零" onPress={this.backZero} />
+        <View style={{marginTop: 30}}>
+          <Text>result: {num}</Text>
+        </View>
+
+        <View>
+          <Text>{loading ? '正在加载...' : ''}</Text>
+        </View>
+
+        <View style={{marginTop: 30}}>
+          <Button title="跳转到详情页" onPress={this.onPress} />
+        </View>
+
+        <View style={{marginTop: 30}}>
+          <Button title="+" onPress={this.handleAdd} />
+        </View>
+
+        <View style={{marginTop: 30}}>
+          <Button title="异步+" onPress={this.handleAsyncAdd} />
+        </View>
+
+        <View style={{marginTop: 30}}>
+          <Button title="异步*" onPress={this.handleAsyncMultiply} />
+        </View>
+
+        <View style={{marginTop: 30}}>
+          <Button title="归零" onPress={this.backZero} />
+        </View>
       </View>
     );
   }

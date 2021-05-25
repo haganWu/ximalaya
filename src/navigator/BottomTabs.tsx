@@ -10,7 +10,7 @@ import Listen from '@/pages/Listen';
 import Found from '@/pages/Found';
 import Account from '@/pages/Account';
 import {RootStackNavigation, RootStackParamList} from '.';
-
+import IconFont from '@/assets/iconfont';
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -61,10 +61,46 @@ class BottomTabs extends React.Component<IProps> {
         tabBarOptions={{
           activeTintColor: '#f86442',
         }}>
-        <Tab.Screen options={{title: '首页'}} name="首页" component={Home} />
-        <Tab.Screen options={{title: '我听'}} name="我听" component={Listen} />
-        <Tab.Screen options={{title: '发现'}} name="发现" component={Found} />
-        <Tab.Screen options={{title: '账号'}} name="账号" component={Account} />
+        <Tab.Screen
+          options={{
+            title: '首页',
+            tabBarIcon: ({color, size}) => (
+              <IconFont name="iconshouye" color={color} size={size} />
+            ),
+          }}
+          name="首页"
+          component={Home}
+        />
+        <Tab.Screen
+          options={{
+            title: '我听',
+            tabBarIcon: ({color, size}) => (
+              <IconFont name="iconwoting" color={color} size={size} />
+            ),
+          }}
+          name="我听"
+          component={Listen}
+        />
+        <Tab.Screen
+          options={{
+            title: '发现',
+            tabBarIcon: ({color, size}) => (
+              <IconFont name="iconfaxian" color={color} size={size} />
+            ),
+          }}
+          name="发现"
+          component={Found}
+        />
+        <Tab.Screen
+          options={{
+            title: '账户',
+            tabBarIcon: ({color, size}) => (
+              <IconFont name="iconzhanghu" color={color} size={size} />
+            ),
+          }}
+          name="账户"
+          component={Account}
+        />
       </Tab.Navigator>
     );
   }
