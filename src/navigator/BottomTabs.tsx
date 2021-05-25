@@ -11,9 +11,10 @@ import Found from '@/pages/Found';
 import Account from '@/pages/Account';
 import {RootStackNavigation, RootStackParamList} from '.';
 import IconFont from '@/assets/iconfont';
+import HomeTabs from './HomeTabs';
 
 export type BottomTabParamList = {
-  Home: undefined;
+  HomeTabs: undefined;
   Listen: undefined;
   Found: undefined;
   Account: undefined;
@@ -69,7 +70,7 @@ class BottomTabs extends React.Component<IProps> {
             ),
           }}
           name="首页"
-          component={Home}
+          component={HomeTabs}
         />
         <Tab.Screen
           options={{

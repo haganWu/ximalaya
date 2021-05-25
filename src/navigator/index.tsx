@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/stack';
 import BottomTabs from './BottomTabs';
 import Detail from '@/pages/Detail';
-import {Platform, StyleSheet} from 'react-native';
+import {Platform, StatusBar, StyleSheet} from 'react-native';
 
 /**
  * 使用type约束泛型类型
@@ -44,7 +44,9 @@ class Navigator extends React.Component {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureEnabled: true,
             gestureDirection: 'horizontal',
+            headerStatusBarHeight:StatusBar.currentHeight,//防止顶部标题每次都渲染闪跳
             headerStyle: {
+              backgroundColor:'#f86442',//设置状态栏颜色
               ...Platform.select({
                 android: {
                   elevation: 0,
