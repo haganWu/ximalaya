@@ -3,11 +3,17 @@ import {Reducer} from 'redux';
 import axios from 'axios';
 
 const CAROUSEL_URL = '/mock/11/hagan/carousel';
+const Guess_URL = '/mock/11/hagan/guess';
 
 export interface ICarousel {
   id: string;
   image: string;
   color: [string, string];
+}
+export interface IGuess {
+  id: string;
+  title: string;
+  image: string;
 }
 
 /**
@@ -15,6 +21,7 @@ export interface ICarousel {
  */
 export interface HomeState {
   carousels: ICarousel[];
+  guesses: IGuess[];
 }
 
 interface HomeModel extends Model {
@@ -27,11 +34,13 @@ interface HomeModel extends Model {
   effects: {
     //同reducers,action处理器,处理异步动作
     fetchCarousels: Effect;
+    fetchGuess: Effect;
   };
 }
 
 const initialState = {
   carousels: [],
+  guesses: [],
 };
 
 const homeModel: HomeModel = {
@@ -53,6 +62,16 @@ const homeModel: HomeModel = {
         type: 'setState',
         payload: {
           carousels: data,
+        },
+      });
+    },
+    *fetchGuess(_, {call, put}) {
+      const {data} = yield call(axios.get, Guess_URL);
+      console.log('猜你喜欢数据', data);
+      yield put({
+        type: 'setState',
+        payload: {
+          guesses: data,
         },
       });
     },

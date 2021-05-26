@@ -1,0 +1,128 @@
+import IconFont from '@/assets/iconfont';
+import Touchable from '@/components/Touchable';
+import {IGuess} from '@/models/home';
+import {RootState} from '@/models/index';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+
+const mapStateToProps = ({home}: RootState) => {
+  return {
+    guesses: home.guesses,
+  };
+};
+
+/**
+ * connect()函数作用用于将 models中的home.ts文件中HomeModel中的state(即dva仓库)映射到 Home(本文件L15)组件中(通过函数mapStateToProps())
+ */
+const connector = connect(mapStateToProps);
+
+type MadelState = ConnectedProps<typeof connector>;
+
+// interface IProps extends MadelState {
+//     guesses: IGuess[];
+// }
+
+class Guess extends React.Component<MadelState> {
+  componentDidMount() {
+    this.fetch();
+  }
+
+  fetch = () => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'home/fetchGuess',
+    });
+  };
+
+  renderItem = ({item}: {item: IGuess}) => {
+    return (
+      <Touchable
+        style={styles.item}
+        onPress={() => {
+          alert('点击');
+        }}>
+        <Image style={styles.image} source={{uri: item.image}} />
+        <Text style={styles.text} numberOfLines={2}>
+          {item.title}
+        </Text>
+      </Touchable>
+    );
+  };
+
+  render() {
+    const {guesses} = this.props;
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <IconFont name="iconxihuan" />
+            <Text style={styles.headerTitle}>猜你喜欢</Text>
+          </View>
+
+          <View>
+            <Text>更多</Text>
+          </View>
+        </View>
+
+        <FlatList
+          style={styles.flatListContainer}
+          numColumns={3}
+          data={guesses}
+          renderItem={this.renderItem}
+        />
+        {/* <Text>{JSON.stringify(guesses)}</Text> */}
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    margin: 16,
+    borderRadius: 8,
+    padding: 4,
+  },
+  image: {
+    width: '100%',
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  item: {
+    flex: 1,
+    marginVertical: 6,
+    marginHorizontal: 10,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 12,
+    borderBottomColor: '#efefef',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  flatListContainer: {
+    marginTop: 12,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+  },
+  headerTitle: {
+    marginLeft:4,
+    color:'#333'
+  },
+  text: {
+    fontSize: 10,
+    color: '#333',
+  },
+});
+export default connector(Guess);

@@ -5,6 +5,7 @@ import Detail from '../Detail';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 import Carousel from './Carousel';
+import Guess from './Guess';
 
 const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
@@ -23,11 +24,13 @@ interface IProps extends MadelState {
 }
 
 class Home extends React.Component<IProps> {
-
-  componentDidMount(){
+  componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
       type: 'home/fetchCarousels',
+    });
+    dispatch({
+      type: 'home/fetchGuess',
     });
   }
 
@@ -38,19 +41,21 @@ class Home extends React.Component<IProps> {
     });
   };
 
-
-
   render() {
     const {carousels} = this.props;
     return (
       <View>
-        <View style={{marginTop: 6}}>
-          <Carousel data={carousels}/>
+        <View>
+          <Carousel data={carousels} />
+        </View>
+        <View>
+          <Guess />
         </View>
       </View>
     );
   }
 }
+
 /**
  * connector(Home)会返回一个新的组件 把Home组件进行加工
  */
