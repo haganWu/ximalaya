@@ -1,11 +1,20 @@
 import {Effect, Model} from 'dva-core-ts';
 import {Reducer} from 'redux';
+import axios from 'axios';
+
+const CAROUSEL_URL = '/mock/11/hagan/carousel';
+
+export interface ICarousel {
+  id: string;
+  image: string;
+  color: [string, string];
+}
 
 /**
  * 当前homeModel状态,保存所有数据
  */
 export interface HomeState {
-  num: number;
+  carousels: ICarousel[];
 }
 
 interface HomeModel extends Model {
@@ -13,67 +22,38 @@ interface HomeModel extends Model {
   state: HomeState; //HomeModel,保存所有数据
   reducers: {
     //action处理器,处理同步动作,用来计算一个最新的state
-    add: Reducer<HomeState>;
-    multiply: Reducer<HomeState>;
-    backZero: Reducer<HomeState>;
+    setState: Reducer<HomeState>;
   };
   effects: {
     //同reducers,action处理器,处理异步动作
-    asyncAdd: Effect;
-    asyncMultiply: Effect;
+    fetchCarousels: Effect;
   };
 }
 
 const initialState = {
-  num: 1,
+  carousels: [],
 };
-
-const initialMultiplyState = {
-  num: 2,
-};
-
-function delay(timeout: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout);
-  });
-}
 
 const homeModel: HomeModel = {
   namespace: 'home',
   state: initialState,
   reducers: {
-    add(state = initialState, {payload}) {
+    setState(state = initialState, {payload}) {
       return {
         ...state,
-        num: state.num + payload.num,
-      };
-    },
-    multiply(state = initialMultiplyState, {payload}) {
-      return {
-        ...state,
-        num: state.num * payload.num,
-      };
-    },
-    backZero(state = initialState) {
-      return {
-        ...state,
-        num: 0,
+        ...payload,
       };
     },
   },
   effects: {
-    *asyncAdd({payload}, {call, put}) {
-      yield call(delay, 3000);
+    *fetchCarousels(_, {call, put}) {
+      const {data} = yield call(axios.get, CAROUSEL_URL);
+      console.log('轮播图数据', data);
       yield put({
-        type: 'add',
-        payload,
-      });
-    },
-    *asyncMultiply({payload}, {call, put}) {
-      yield call(delay, 5000);
-      yield put({
-        type: 'multiply',
-        payload,
+        type: 'setState',
+        payload: {
+          carousels: data,
+        },
       });
     },
   },

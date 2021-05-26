@@ -31,7 +31,7 @@ class HomeTabs extends React.Component {
             tabBarLabel: '推荐',
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Home1"
           component={Home}
           options={{
@@ -44,7 +44,7 @@ class HomeTabs extends React.Component {
           options={{
             tabBarLabel: '推荐',
           }}
-        />
+        /> */}
       </Tab.Navigator>
     );
   }
