@@ -9,7 +9,6 @@ import {
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity,
   Alert,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';

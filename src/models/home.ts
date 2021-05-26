@@ -2,8 +2,18 @@ import {Effect, Model} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
 
+/**
+ * 轮播图
+ */
 const CAROUSEL_URL = '/mock/11/hagan/carousel';
-const Guess_URL = '/mock/11/hagan/guess';
+/**
+ * 猜你喜欢
+ */
+const GUESS_URL = '/mock/11/hagan/guess';
+/**
+ * 首页列表
+ */
+const CHANNEL_URL = '/mock/11/hagan/channel';
 
 export interface ICarousel {
   id: string;
@@ -15,6 +25,35 @@ export interface IGuess {
   title: string;
   image: string;
 }
+export interface IChannel {
+  // results: IChannelResults[];
+  // info: IChannelInfo;
+  // pagination: IChannelPagination;
+  id: string;
+  image: string;
+  title: string;
+  played: number;
+  playing: number;
+  remark: string;
+}
+// export interface IChannelResults {
+//   id: string;
+//   image: string;
+//   title: string;
+//   played: number;
+//   playing: number;
+//   remark: string;
+// }
+// export interface IChannelInfo {
+//   page: number;
+//   results: number;
+//   total: number;
+// }
+// export interface IChannelPagination {
+//   current: number;
+//   total: number;
+//   pageSize: number;
+// }
 
 /**
  * 当前homeModel状态,保存所有数据
@@ -22,6 +61,7 @@ export interface IGuess {
 export interface HomeState {
   carousels: ICarousel[];
   guesses: IGuess[];
+  channels:IChannel[];
 }
 
 interface HomeModel extends Model {
@@ -35,12 +75,14 @@ interface HomeModel extends Model {
     //同reducers,action处理器,处理异步动作
     fetchCarousels: Effect;
     fetchGuess: Effect;
+    fetchChannel: Effect;
   };
 }
 
 const initialState = {
   carousels: [],
   guesses: [],
+  channels:[],
 };
 
 const homeModel: HomeModel = {
@@ -66,12 +108,22 @@ const homeModel: HomeModel = {
       });
     },
     *fetchGuess(_, {call, put}) {
-      const {data} = yield call(axios.get, Guess_URL);
+      const {data} = yield call(axios.get, GUESS_URL);
       console.log('猜你喜欢数据', data);
       yield put({
         type: 'setState',
         payload: {
           guesses: data,
+        },
+      });
+    },
+    *fetchChannel(_, {call, put}) {
+      const {data} = yield call(axios.get, CHANNEL_URL);
+      console.log('频道数据', data);
+      yield put({
+        type: 'setState',
+        payload: {
+          channels: data,
         },
       });
     },

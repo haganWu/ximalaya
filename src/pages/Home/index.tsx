@@ -7,6 +7,7 @@ import {RootState} from '@/models/index';
 import Carousel from './Carousel';
 import Guess from './Guess';
 import {ScrollView} from 'react-native-gesture-handler';
+import Channel from './Channel';
 
 const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
@@ -33,6 +34,9 @@ class Home extends React.Component<IProps> {
     dispatch({
       type: 'home/fetchGuess',
     });
+    dispatch({
+      type: 'home/fetchChannel',
+    });
   }
 
   onPress = () => {
@@ -46,10 +50,9 @@ class Home extends React.Component<IProps> {
     const {carousels} = this.props;
     return (
       <ScrollView>
-        <View>
-          <Carousel data={carousels} />
-          <Guess />
-        </View>
+        <Carousel data={carousels} />
+        <Guess />
+        <Channel />
       </ScrollView>
     );
   }
