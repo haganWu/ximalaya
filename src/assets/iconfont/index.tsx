@@ -25,7 +25,7 @@ import Iconback from './Iconback';
 import IconfavoritesFill from './IconfavoritesFill';
 import Iconstop from './Iconstop';
 import Iconshijian from './Iconshijian';
-import Icongengduo from './Icongengduo';
+import Iconmore from './Iconmore';
 import Iconmessage2 from './Iconmessage2';
 import Iconxihuan from './Iconxihuan';
 import Iconwoting from './Iconwoting';
@@ -33,7 +33,7 @@ import Iconshouye from './Iconshouye';
 import Iconzhanghu from './Iconzhanghu';
 import Iconfaxian from './Iconfaxian';
 
-export type IconNames = 'iconerji' | 'iconcainixihuan' | 'iconFullscreen' | 'iconvolume_off' | 'iconmusic-icon_pause' | 'iconxia' | 'iconbofang' | 'iconbofangsanjiaoxing' | 'iconbofang1' | 'iconnext' | 'iconxiayishou' | 'iconround-play_arrow-p' | 'icongerenzhanghaoguanli' | 'iconVolumeUp' | 'iconshengyin' | 'iconlijitingke' | 'iconhuanyipi' | 'iconback' | 'iconfavorites-fill' | 'iconstop' | 'iconshijian' | 'icongengduo' | 'iconmessage2' | 'iconxihuan' | 'iconwoting' | 'iconshouye' | 'iconzhanghu' | 'iconfaxian';
+export type IconNames = 'iconerji' | 'iconcainixihuan' | 'iconFullscreen' | 'iconvolume_off' | 'iconmusic-icon_pause' | 'iconxia' | 'iconbofang' | 'iconbofangsanjiaoxing' | 'iconbofang1' | 'iconnext' | 'iconxiayishou' | 'iconround-play_arrow-p' | 'icongerenzhanghaoguanli' | 'iconVolumeUp' | 'iconshengyin' | 'iconlijitingke' | 'iconhuanyipi' | 'iconback' | 'iconfavorites-fill' | 'iconstop' | 'iconshijian' | 'iconmore' | 'iconmessage2' | 'iconxihuan' | 'iconwoting' | 'iconshouye' | 'iconzhanghu' | 'iconfaxian';
 
 interface Props extends GProps, ViewProps {
   name: IconNames;
@@ -85,8 +85,8 @@ let IconFont: FunctionComponent<Props> = ({ name, ...rest }) => {
       return <Iconstop key="20" {...rest} />;
     case 'iconshijian':
       return <Iconshijian key="21" {...rest} />;
-    case 'icongengduo':
-      return <Icongengduo key="22" {...rest} />;
+    case 'iconmore':
+      return <Iconmore key="22" {...rest} />;
     case 'iconmessage2':
       return <Iconmessage2 key="23" {...rest} />;
     case 'iconxihuan':

@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 import Carousel from './Carousel';
 import Guess from './Guess';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
@@ -44,14 +45,12 @@ class Home extends React.Component<IProps> {
   render() {
     const {carousels} = this.props;
     return (
-      <View>
+      <ScrollView>
         <View>
           <Carousel data={carousels} />
-        </View>
-        <View>
           <Guess />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

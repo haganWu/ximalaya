@@ -48,10 +48,10 @@ class Guess extends React.Component<MadelState> {
       <Touchable
         style={styles.item}
         onPress={() => {
-          alert('点击');
+          Alert.alert('点击');
         }}>
         <Image style={styles.image} source={{uri: item.image}} />
-        <Text style={styles.text} numberOfLines={2}>
+        <Text style={styles.itemText} numberOfLines={2}>
           {item.title}
         </Text>
       </Touchable>
@@ -68,8 +68,9 @@ class Guess extends React.Component<MadelState> {
             <Text style={styles.headerTitle}>猜你喜欢</Text>
           </View>
 
-          <View>
-            <Text>更多</Text>
+          <View style={styles.headerRight}>
+            <Text style={styles.headerMoreText}>更多</Text>
+            <IconFont size={14} name="iconmore" />
           </View>
         </View>
 
@@ -80,6 +81,11 @@ class Guess extends React.Component<MadelState> {
           renderItem={this.renderItem}
         />
         {/* <Text>{JSON.stringify(guesses)}</Text> */}
+
+        <Touchable style={styles.changeOneGroup} onPress={this.fetch}>
+          <IconFont name="iconhuanyipi" color="#f86442"/>
+          <Text style={styles.changeOneGroupText}>换一批</Text>
+        </Touchable>
       </View>
     );
   }
@@ -111,18 +117,38 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   flatListContainer: {
-    marginTop: 12,
+    padding: 10,
   },
   headerLeft: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerTitle: {
-    marginLeft:4,
-    color:'#333'
+    marginLeft: 4,
+    color: '#333',
   },
-  text: {
+  headerMoreText: {
+    marginRight: 4,
+    color: '#6f6f6f',
+  },
+  itemText: {
     fontSize: 10,
     color: '#333',
+  },
+  changeOneGroup: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 12,
+  },
+  changeOneGroupText: {
+    marginRight: 4,
+    color: '#333',
+    marginLeft: 4,
   },
 });
 export default connector(Guess);
