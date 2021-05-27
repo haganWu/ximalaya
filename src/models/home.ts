@@ -75,7 +75,7 @@ interface HomeModel extends Model {
     //同reducers,action处理器,处理异步动作
     fetchCarousels: Effect;
     fetchGuess: Effect;
-    fetchChannel: Effect;
+    fetchChannels: Effect;
   };
 }
 
@@ -117,13 +117,13 @@ const homeModel: HomeModel = {
         },
       });
     },
-    *fetchChannel(_, {call, put}) {
+    *fetchChannels(_, {call, put}) {
       const {data} = yield call(axios.get, CHANNEL_URL);
       console.log('频道数据', data);
       yield put({
         type: 'setState',
         payload: {
-          channels: data,
+          channels: data.results,
         },
       });
     },

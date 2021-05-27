@@ -10,8 +10,10 @@ import {
   FlatList,
   Image,
   Alert,
+  ListRenderItemInfo,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import GuessItem from './GuessItem';
 
 const mapStateToProps = ({home}: RootState) => {
   return {
@@ -42,19 +44,12 @@ class Guess extends React.Component<MadelState> {
     });
   };
 
-  renderItem = ({item}: {item: IGuess}) => {
-    return (
-      <Touchable
-        style={styles.item}
-        onPress={() => {
-          Alert.alert('点击');
-        }}>
-        <Image style={styles.image} source={{uri: item.image}} />
-        <Text style={styles.itemText} numberOfLines={2}>
-          {item.title}
-        </Text>
-      </Touchable>
-    );
+  onPress = (data: IGuess) => {
+    Alert.alert(data.title);
+  };
+
+  renderItem = ({item}: ListRenderItemInfo<IGuess>) => {
+    return <GuessItem data={item} onPress={this.onPress}/>;
   };
 
   render() {
