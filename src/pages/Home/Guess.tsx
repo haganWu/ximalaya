@@ -52,6 +52,11 @@ class Guess extends React.Component<MadelState> {
     return <GuessItem data={item} onPress={this.onPress}/>;
   };
 
+  
+  keyExtractor = (item:IGuess) => {
+    return item.id;
+  };
+
   render() {
     const {guesses} = this.props;
     return (
@@ -73,6 +78,7 @@ class Guess extends React.Component<MadelState> {
           numColumns={3}
           data={guesses}
           renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
         />
         {/* <Text>{JSON.stringify(guesses)}</Text> */}
 
