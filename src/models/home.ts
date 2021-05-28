@@ -1,6 +1,7 @@
 import {Effect, Model} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
+import {RootState} from '.';
 
 /**
  * 轮播图
@@ -26,9 +27,6 @@ export interface IGuess {
   image: string;
 }
 export interface IChannel {
-  // results: IChannelResults[];
-  // info: IChannelInfo;
-  // pagination: IChannelPagination;
   id: string;
   image: string;
   title: string;
@@ -36,24 +34,13 @@ export interface IChannel {
   playing: number;
   remark: string;
 }
-// export interface IChannelResults {
-//   id: string;
-//   image: string;
-//   title: string;
-//   played: number;
-//   playing: number;
-//   remark: string;
-// }
-// export interface IChannelInfo {
-//   page: number;
-//   results: number;
-//   total: number;
-// }
-// export interface IChannelPagination {
-//   current: number;
-//   total: number;
-//   pageSize: number;
-// }
+
+export interface IPagination {
+  current: number;
+  total: number;
+  pageSize: number;
+  hasMore: boolean;
+}
 
 /**
  * 当前homeModel状态,保存所有数据
@@ -61,7 +48,8 @@ export interface IChannel {
 export interface HomeState {
   carousels: ICarousel[];
   guesses: IGuess[];
-  channels:IChannel[];
+  channels: IChannel[];
+  pagination: IPagination;
 }
 
 interface HomeModel extends Model {
@@ -82,7 +70,13 @@ interface HomeModel extends Model {
 const initialState = {
   carousels: [],
   guesses: [],
-  channels:[],
+  channels: [],
+  pagination: {
+    current: 1,
+    total: 0,
+    pageSize: 10,
+    hasMore: true,
+  },
 };
 
 const homeModel: HomeModel = {
@@ -117,15 +111,49 @@ const homeModel: HomeModel = {
         },
       });
     },
-    *fetchChannels(_, {call, put}) {
-      const {data} = yield call(axios.get, CHANNEL_URL);
-      console.log('频道数据', data);
+    *fetchChannels({callback, payload}, {call, put, select}) {
+      //获取历史数据
+      let {channels, pagination} = yield select(
+        (state: RootState) => state.home,
+      );
+      let page = pagination.current;
+      if (payload) {
+        if (payload.loadMore) {
+          page++;
+          console.log('上拉加载更多  page = ' + page);
+        } else if (payload.refreshing) {
+          console.log('下拉刷新  page = 1');
+          page = 1;
+        }
+      }
+
+      //请求到的新数据
+      const {data} = yield call(axios.get, CHANNEL_URL, {
+        params: {
+          page,
+        },
+      });
+      let newChannels = data.results;
+      console.log('新请求到底newChannels-11', newChannels);
+      console.log('历史的channels-11', channels);
+      if (payload && payload.loadMore) {
+        newChannels = channels.concat(newChannels);
+      }
       yield put({
         type: 'setState',
         payload: {
-          channels: data.results,
+          channels: newChannels,
+          pagination: {
+            current: data.pagination.current,
+            total: data.pagination.total,
+            pageSize: data.pagination.pageSize,
+            hasMore: newChannels.length < data.pagination.total,
+          },
         },
       });
+      if (typeof callback === 'function') {
+        callback();
+      }
     },
   },
 };
