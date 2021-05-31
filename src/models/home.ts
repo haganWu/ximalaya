@@ -93,7 +93,6 @@ const homeModel: HomeModel = {
   effects: {
     *fetchCarousels(_, {call, put}) {
       const {data} = yield call(axios.get, CAROUSEL_URL);
-      console.log('轮播图数据', data);
       yield put({
         type: 'setState',
         payload: {
@@ -103,7 +102,6 @@ const homeModel: HomeModel = {
     },
     *fetchGuess(_, {call, put}) {
       const {data} = yield call(axios.get, GUESS_URL);
-      console.log('猜你喜欢数据', data);
       yield put({
         type: 'setState',
         payload: {
@@ -120,9 +118,7 @@ const homeModel: HomeModel = {
       if (payload) {
         if (payload.loadMore) {
           page++;
-          console.log('上拉加载更多  page = ' + page);
         } else if (payload.refreshing) {
-          console.log('下拉刷新  page = 1');
           page = 1;
         }
       }
@@ -134,8 +130,6 @@ const homeModel: HomeModel = {
         },
       });
       let newChannels = data.results;
-      console.log('新请求到底newChannels-11', newChannels);
-      console.log('历史的channels-11', channels);
       if (payload && payload.loadMore) {
         newChannels = channels.concat(newChannels);
       }

@@ -95,7 +95,6 @@ class Home extends React.Component<IProps, IState> {
    * 上拉加载更多
    */
   onEndReached = () => {
-    console.log('load more');
     const {dispatch, loading, hasMore} = this.props;
     if (loading || !hasMore) {
       return;
@@ -120,8 +119,6 @@ class Home extends React.Component<IProps, IState> {
 
   get footer() {
     const {hasMore, loading, channels} = this.props;
-    console.log('footer -> hasMore:', hasMore);
-    console.log('footer -> channels:', channels);
     if (!hasMore && channels.length > 0) {
       return (
         <View style={styles.end}>
