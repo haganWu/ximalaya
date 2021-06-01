@@ -6,14 +6,38 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import Touchable from '@/components/Touchable';
+import LinearGradient from 'react-native-linear-gradient';
+import {RootState} from '@/models/index';
+import {connect, ConnectedProps} from 'react-redux';
 
-interface Iprops extends MaterialTopTabBarProps {}
+const mapStateToProps = ({home}: RootState) => {
+  console.log('home----:', home);
+  console.log('home.carousels----:', home.carousels);
+  console.log('home.activeCarouselIndex----:', home.activeCarouselIndex);
+  return {
+    linearColors: home.carousels
+      ? home.carousels.length > 0
+        ? home.carousels[home.activeCarouselIndex].colors
+        : undefined
+      : undefined,
+  };
+};
+const connector = connect(mapStateToProps);
+type MadelState = ConnectedProps<typeof connector>;
+
+type Iprops = MaterialTopTabBarProps & MadelState;
 
 class TopTabBarWrapper extends React.Component<Iprops> {
+  get linearGradient() {
+    const {linearColors = ['#ccc', '#e2e2e2']} = this.props;
+    return <LinearGradient colors={linearColors} style={styles.gradient} />;
+  }
+
   render() {
     const {props} = this;
     return (
       <View style={styles.topTabBarContainer}>
+        {this.linearGradient}
         <View style={styles.topTabBarView}>
           <MaterialTopTabBar {...props} style={styles.tabBar} />
 
@@ -47,8 +71,8 @@ const styles = StyleSheet.create({
   tabBar: {
     elevation: 0,
     flex: 1,
-    overflow:'hidden',
-    backgroundColor:'transparent',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   categoryBtn: {
     paddingHorizontal: 10,
@@ -67,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flex: 1,
     paddingLeft: 12,
-    justifyContent:'center',
+    justifyContent: 'center',
   },
   searchText: {
     fontSize: 14,
@@ -78,6 +102,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     fontSize: 14,
   },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    height: 260,
+  },
 });
 
-export default TopTabBarWrapper;
+export default connector(TopTabBarWrapper);

@@ -1,3 +1,4 @@
+import {RootState} from '@/models/index';
 import {ICarousel} from '@/models/home';
 import {viewportWidth, wp, hp} from '@/utils/index';
 import React from 'react';
@@ -7,6 +8,7 @@ import SnapCarousel, {
   Pagination,
   ParallaxImage,
 } from 'react-native-snap-carousel';
+import {connect, ConnectedProps} from 'react-redux';
 
 const sliderWidth = viewportWidth;
 /**
@@ -19,18 +21,27 @@ const sideWidth = wp(90);
 const sideHeight = hp(26);
 const itemWidth = sideWidth + wp(2) * 2;
 
-interface Iprops {
-  data: ICarousel[];
-}
+const mapStateToProps = ({home}: RootState) => ({
+  data: home.carousels,
+  activeCarouselIndex: home.activeCarouselIndex,
+});
 
-class Carousel extends React.Component<Iprops> {
-  state = {
-    activeSlide: 0,
-  };
+/**
+ * connect()函数作用用于将 models中的home.ts文件中HomeModel中的state(即dva仓库)映射到 Home(本文件L15)组件中(通过函数mapStateToProps())
+ */
+const connector = connect(mapStateToProps);
 
+type MadelState = ConnectedProps<typeof connector>;
+
+interface IProps extends MadelState {}
+class Carousel extends React.Component<IProps> {
   onSnapToItem = (index: number) => {
-    this.setState({
-      activeSlide: index,
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'home/setState',
+      payload: {
+        activeCarouselIndex: index,
+      },
     });
   };
 
@@ -53,15 +64,14 @@ class Carousel extends React.Component<Iprops> {
   };
 
   get pagination() {
-    const {data} = this.props;
-    const {activeSlide} = this.state;
+    const {data, activeCarouselIndex} = this.props;
     return (
       <View style={styles.paginationWrapper}>
         <Pagination
           containerStyle={styles.paginationContainer}
           dotContainerStyle={styles.dotContainer}
           dotStyle={styles.dot}
-          activeDotIndex={activeSlide}
+          activeDotIndex={activeCarouselIndex}
           dotsLength={data.length}
           inactiveDotScale={0.7}
           inactiveDotOpacity={0.4}
@@ -124,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Carousel;
+export default connector(Carousel);

@@ -108,10 +108,9 @@ class Home extends React.Component<IProps, IState> {
   };
 
   get header() {
-    const {carousels} = this.props;
     return (
       <View>
-        <Carousel data={carousels} />
+        <Carousel />
         <Guess />
       </View>
     );

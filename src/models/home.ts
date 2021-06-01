@@ -19,7 +19,7 @@ const CHANNEL_URL = '/mock/11/hagan/channel';
 export interface ICarousel {
   id: string;
   image: string;
-  color: [string, string];
+  colors: [string, string];
 }
 export interface IGuess {
   id: string;
@@ -47,6 +47,7 @@ export interface IPagination {
  */
 export interface HomeState {
   carousels: ICarousel[];
+  activeCarouselIndex: number; //当前轮播图下标
   guesses: IGuess[];
   channels: IChannel[];
   pagination: IPagination;
@@ -69,6 +70,7 @@ interface HomeModel extends Model {
 
 const initialState = {
   carousels: [],
+  activeCarouselIndex: 0,
   guesses: [],
   channels: [],
   pagination: {
