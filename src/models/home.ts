@@ -48,6 +48,7 @@ export interface IPagination {
 export interface HomeState {
   carousels: ICarousel[];
   activeCarouselIndex: number; //当前轮播图下标
+  gradientVisible:boolean;
   guesses: IGuess[];
   channels: IChannel[];
   pagination: IPagination;
@@ -71,6 +72,7 @@ interface HomeModel extends Model {
 const initialState = {
   carousels: [],
   activeCarouselIndex: 0,
+  gradientVisible:true,
   guesses: [],
   channels: [],
   pagination: {

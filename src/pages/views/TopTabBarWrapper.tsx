@@ -6,15 +6,13 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import Touchable from '@/components/Touchable';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearAnimatedGradientTransition from 'react-native-linear-animated-gradient-transition';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
 
 const mapStateToProps = ({home}: RootState) => {
-  console.log('home----:', home);
-  console.log('home.carousels----:', home.carousels);
-  console.log('home.activeCarouselIndex----:', home.activeCarouselIndex);
   return {
+    gradientVisible: home.gradientVisible,
     linearColors: home.carousels
       ? home.carousels.length > 0
         ? home.carousels[home.activeCarouselIndex].colors
@@ -29,29 +27,64 @@ type Iprops = MaterialTopTabBarProps & MadelState;
 
 class TopTabBarWrapper extends React.Component<Iprops> {
   get linearGradient() {
-    const {linearColors = ['#ccc', '#e2e2e2']} = this.props;
-    return <LinearGradient colors={linearColors} style={styles.gradient} />;
+    const {gradientVisible, linearColors = ['#ccc', '#e2e2e2']} = this.props;
+    if (gradientVisible) {
+      return (
+        <LinearAnimatedGradientTransition
+          colors={linearColors}
+          style={styles.gradient}
+        />
+      );
+    }
+    return null;
   }
 
   render() {
-    const {props} = this;
+    let {gradientVisible, indicatorStyle, ...restProp} = this.props;
+    let textStyle = styles.text;
+    let activeTintColor = '#333';
+    let inactiveTintColor = '#ccc';
+    if (gradientVisible) {
+      textStyle = styles.whiteText;
+      activeTintColor = '#f86442';
+      inactiveTintColor = '#fff';
+      if (indicatorStyle) {
+        indicatorStyle = StyleSheet.compose(
+          indicatorStyle,
+          styles.themeBackgroundColor,
+        );
+      }
+    }else{
+      if (indicatorStyle) {
+        indicatorStyle = StyleSheet.compose(
+          indicatorStyle,
+          styles.blackBackgroundColor,
+        );
+      }
+    }
     return (
       <View style={styles.topTabBarContainer}>
         {this.linearGradient}
         <View style={styles.topTabBarView}>
-          <MaterialTopTabBar {...props} style={styles.tabBar} />
+          <MaterialTopTabBar
+            {...restProp}
+            indicatorStyle={indicatorStyle}
+            activeTintColor={activeTintColor}
+            inactiveTintColor={inactiveTintColor}
+            style={styles.tabBar}
+          />
 
           <Touchable style={styles.categoryBtn}>
-            <Text>分类</Text>
+            <Text style={textStyle}>分类</Text>
           </Touchable>
         </View>
 
         <View style={styles.searchContainer}>
           <Touchable style={styles.searchBtn}>
-            <Text style={styles.searchText}>搜索</Text>
+            <Text style={textStyle}>搜索</Text>
           </Touchable>
           <Touchable style={styles.historyBtn}>
-            <Text>历史记录</Text>
+            <Text style={textStyle}>历史记录</Text>
           </Touchable>
         </View>
       </View>
@@ -87,15 +120,11 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginVertical: 8,
     paddingVertical: 8,
-    backgroundColor: '#efefef',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     borderRadius: 8,
     flex: 1,
     paddingLeft: 12,
     justifyContent: 'center',
-  },
-  searchText: {
-    fontSize: 14,
-    color: '#ccc',
   },
 
   historyBtn: {
@@ -105,6 +134,21 @@ const styles = StyleSheet.create({
   gradient: {
     ...StyleSheet.absoluteFillObject,
     height: 260,
+  },
+  text: {
+    color: '#333',
+  },
+  whiteText: {
+    color: '#fff',
+  },
+  whiteBackgroundColor: {
+    backgroundColor: '#fff',
+  },
+  blackBackgroundColor: {
+    backgroundColor: '#666',
+  },
+  themeBackgroundColor: {
+    backgroundColor: '#f86442',
   },
 });
 

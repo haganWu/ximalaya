@@ -7,21 +7,25 @@ import {
   Text,
   StyleSheet,
   Image,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {RootStackNavigation} from '@/navigator/index';
 import Detail from '../Detail';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
-import Carousel from './Carousel';
+import Carousel, {sideHeight} from './Carousel';
 import Guess from './Guess';
 import ChannelItem from './ChannelItem';
 import {IChannel} from '@/models/home';
 import IconFont from '@/assets/iconfont';
+import {hp} from '@/utils/index';
 
 const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
   channels: home.channels,
   hasMore: home.pagination.hasMore,
+  gradientVisible: home.gradientVisible,
   loading: loading.effects['home/fetchChannels'],
 });
 
@@ -107,11 +111,34 @@ class Home extends React.Component<IProps, IState> {
     });
   };
 
+  /**
+   * 滑动监听
+   */
+  onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offSetY = nativeEvent.contentOffset.y;
+    const carouselHeight = sideHeight ? sideHeight : hp(26);
+    let newGradientVisible = offSetY < carouselHeight;
+    console.log(
+      `offSetY:${offSetY},sideHeight:${sideHeight},newGradientVisible:${newGradientVisible},carouselHeight:${carouselHeight}`,
+    );
+    const {dispatch, gradientVisible} = this.props;
+    if (gradientVisible !== newGradientVisible) {
+      dispatch({
+        type: 'home/setState',
+        payload: {
+          gradientVisible: newGradientVisible,
+        },
+      });
+    }
+  };
+
   get header() {
     return (
       <View>
         <Carousel />
-        <Guess />
+        <View style={styles.background}>
+          <Guess />
+        </View>
       </View>
     );
   }
@@ -164,6 +191,7 @@ class Home extends React.Component<IProps, IState> {
         onRefresh={this.onRefresh}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={0.2}
+        onScroll={this.onScroll}
       />
     );
   }
@@ -189,6 +217,9 @@ const styles = StyleSheet.create({
   },
   endLine: {
     flex: 1,
+  },
+  background: {
+    backgroundColor: '#fff',
   },
 });
 
