@@ -18,7 +18,7 @@ const sideWidth = wp(90);
 /**
  * 图片高度
  */
-export const slideHeight = hp(26);
+export const sideHeight = hp(26);
 const itemWidth = sideWidth + wp(2) * 2;
 
 const mapStateToProps = ({home}: RootState) => ({
@@ -103,7 +103,7 @@ class Carousel extends React.Component<IProps> {
 const styles = StyleSheet.create({
   imageContainer: {
     width: itemWidth,
-    height: slideHeight,
+    height: sideHeight,
     borderRadius: 8,
     marginTop: 4,
   },
