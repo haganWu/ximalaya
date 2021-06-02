@@ -1,11 +1,13 @@
 import {ICategory} from '@/models/category';
 import {RootState} from '@/models/index';
+import {RootStackNavigation} from '@/navigator/index';
 import _ from 'lodash';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import CategoryItem from './CategoryItem';
+import HeaderRightButton from './HeaderRightButton';
 
 /**
  * 从dva获取数据
@@ -20,7 +22,9 @@ const connector = connect(mapStateToProps);
 
 type MadelState = ConnectedProps<typeof connector>;
 
-interface IProps extends MadelState {}
+interface IProps extends MadelState {
+  navigation: RootStackNavigation;
+}
 
 /**
  * 保存用户临时选择的分类,待用户点击"完成"之后再将用户选择的分类报错值dva仓库
@@ -33,6 +37,20 @@ class Category extends React.Component<IProps, IState> {
   state = {
     myCategories: this.props.myCategories,
   };
+
+  constructor(props: IProps) {
+    super(props);
+    props.navigation.setOptions({
+        headerRight:() => <HeaderRightButton onSubmit={this.onSubmit}/>
+    });
+  }
+
+  onSubmit = () => {
+      const {dispatch} = this.props;
+      dispatch({
+          type:'category/toogle'
+      });
+  }
 
   renderItem = (item: ICategory, index: number) => {
     return <CategoryItem data={item} />;

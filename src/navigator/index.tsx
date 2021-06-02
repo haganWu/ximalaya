@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/stack';
 import BottomTabs from './BottomTabs';
 import Detail from '@/pages/Detail';
-import {Platform, StatusBar, StyleSheet} from 'react-native';
+import {Platform, StatusBar, StyleSheet, View} from 'react-native';
 import Category from '@/pages/Category/index';
 
 /**
@@ -46,9 +46,15 @@ class Navigator extends React.Component {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureEnabled: true,
             gestureDirection: 'horizontal',
-            headerStatusBarHeight: StatusBar.currentHeight, //防止顶部标题每次都渲染闪跳
+            ...Platform.select({
+              android: {
+                headerStatusBarHeight: StatusBar.currentHeight, //防止顶部标题每次都渲染闪跳
+              },
+            }),
+            headerBackTitleVisible: false, //去除iOS返回按钮带标题'返回'字样
+            headerTintColor: '#333', //修改标题和返回按钮的颜色
             headerStyle: {
-              backgroundColor: '#f86442', //设置状态栏颜色
+              backgroundColor: '#fff', //设置状态栏颜色
               ...Platform.select({
                 android: {
                   elevation: 0,
@@ -63,7 +69,17 @@ class Navigator extends React.Component {
             component={BottomTabs}
           />
           <Stack.Screen
-            options={{title: '分类', headerTitle: '分类'}}
+            options={{
+              title: '分类',
+              headerTitle: '分类',
+              // headerRight: () => {  //添加右侧按钮
+              //   return (
+              //     <View>
+              //       <Text>编辑</Text>
+              //     </View>
+              //   );
+              // },
+            }}
             name="Category"
             component={Category}
           />

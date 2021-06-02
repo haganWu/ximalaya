@@ -2,6 +2,7 @@ import {Effect, Model, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import storage, {load} from '@/config/storage';
 import axios from 'axios';
+import {RootState} from '.';
 
 /**
  * 轮播图
@@ -15,6 +16,7 @@ export interface ICategory {
 }
 
 export interface CategoryModelState {
+  isEdit: boolean;
   myCategories: ICategory[];
   categories: ICategory[];
 }
@@ -29,11 +31,14 @@ interface CategoryModel extends Model {
   effects: {
     //同reducers,action处理器,处理异步动作
     loadData: Effect;
+    //用于切换编辑状态,需在toogle中将数据保存在storage里面
+    toogle: Effect;
   };
   subscriptions: SubscriptionsMapObject;
 }
 
 const initialState = {
+  isEdit: false,
   myCategories: [
     {id: 'recommend', name: '推荐'},
     {id: 'vip', name: 'Vip'},
@@ -75,6 +80,15 @@ const categoryModel: CategoryModel = {
           },
         });
       }
+    },
+    *toogle({payload}, {put, select}) {
+      const category = yield select(({category}: RootState) => category);
+      yield put({
+        type: 'setState',
+        payload: {
+          isEdit: !category.isEdit,
+        },
+      });
     },
   },
 
