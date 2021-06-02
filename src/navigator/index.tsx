@@ -9,6 +9,7 @@ import {
 import BottomTabs from './BottomTabs';
 import Detail from '@/pages/Detail';
 import {Platform, StatusBar, StyleSheet} from 'react-native';
+import Category from '@/pages/Category/index';
 
 /**
  * 使用type约束泛型类型
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   BottomTabs: {
     screen?: string;
   };
+  Category: undefined;
   Detail: {
     id: number;
   };
@@ -44,9 +46,9 @@ class Navigator extends React.Component {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureEnabled: true,
             gestureDirection: 'horizontal',
-            headerStatusBarHeight:StatusBar.currentHeight,//防止顶部标题每次都渲染闪跳
+            headerStatusBarHeight: StatusBar.currentHeight, //防止顶部标题每次都渲染闪跳
             headerStyle: {
-              backgroundColor:'#f86442',//设置状态栏颜色
+              backgroundColor: '#f86442', //设置状态栏颜色
               ...Platform.select({
                 android: {
                   elevation: 0,
@@ -56,9 +58,14 @@ class Navigator extends React.Component {
             },
           }}>
           <Stack.Screen
-           options={{title:'首页',headerTitle:'首页'}}
+            options={{title: '首页', headerTitle: '首页'}}
             name="BottomTabs"
             component={BottomTabs}
+          />
+          <Stack.Screen
+            options={{title: '分类', headerTitle: '分类'}}
+            name="Category"
+            component={Category}
           />
           {/* headerTitleAlign: 'left',  */}
           <Stack.Screen

@@ -26,6 +26,11 @@ type MadelState = ConnectedProps<typeof connector>;
 type Iprops = MaterialTopTabBarProps & MadelState;
 
 class TopTabBarWrapper extends React.Component<Iprops> {
+  goCategory = () => {
+    const {navigation} = this.props;
+    navigation.navigate('Category');
+  };
+
   get linearGradient() {
     const {gradientVisible, linearColors = ['#ccc', '#e2e2e2']} = this.props;
     if (gradientVisible) {
@@ -54,7 +59,7 @@ class TopTabBarWrapper extends React.Component<Iprops> {
           styles.themeBackgroundColor,
         );
       }
-    }else{
+    } else {
       if (indicatorStyle) {
         indicatorStyle = StyleSheet.compose(
           indicatorStyle,
@@ -74,7 +79,7 @@ class TopTabBarWrapper extends React.Component<Iprops> {
             style={styles.tabBar}
           />
 
-          <Touchable style={styles.categoryBtn}>
+          <Touchable style={styles.categoryBtn} onPress={this.goCategory}>
             <Text style={textStyle}>分类</Text>
           </Touchable>
         </View>
