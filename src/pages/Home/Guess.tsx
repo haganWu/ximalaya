@@ -28,19 +28,19 @@ const connector = connect(mapStateToProps);
 
 type MadelState = ConnectedProps<typeof connector>;
 
-// interface IProps extends MadelState {
-//     guesses: IGuess[];
-// }
+interface IProps extends MadelState {
+  namespace: string;
+}
 
-class Guess extends React.Component<MadelState> {
+class Guess extends React.Component<IProps> {
   componentDidMount() {
     this.fetch();
   }
 
   fetch = () => {
-    const {dispatch} = this.props;
+    const {dispatch, namespace} = this.props;
     dispatch({
-      type: 'home/fetchGuess',
+      type: namespace + '/fetchGuess',
     });
   };
 
@@ -49,11 +49,10 @@ class Guess extends React.Component<MadelState> {
   };
 
   renderItem = ({item}: ListRenderItemInfo<IGuess>) => {
-    return <GuessItem data={item} onPress={this.onPress}/>;
+    return <GuessItem data={item} onPress={this.onPress} />;
   };
 
-  
-  keyExtractor = (item:IGuess) => {
+  keyExtractor = (item: IGuess) => {
     return item.id;
   };
 
@@ -83,7 +82,7 @@ class Guess extends React.Component<MadelState> {
         {/* <Text>{JSON.stringify(guesses)}</Text> */}
 
         <Touchable style={styles.changeOneGroup} onPress={this.fetch}>
-          <IconFont name="iconhuanyipi" color="#f86442"/>
+          <IconFont name="iconhuanyipi" color="#f86442" />
           <Text style={styles.changeOneGroupText}>换一批</Text>
         </Touchable>
       </View>
