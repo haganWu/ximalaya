@@ -1,3 +1,4 @@
+import Touchable from '@/components/Touchable';
 import {ICategory} from '@/models/category';
 import {RootState} from '@/models/index';
 import {RootStackNavigation} from '@/navigator/index';
@@ -16,6 +17,7 @@ const mapStateToProps = ({category}: RootState) => {
   return {
     myCategories: category.myCategories,
     categories: category.categories,
+    isEdit: category.isEdit,
   };
 };
 const connector = connect(mapStateToProps);
@@ -33,6 +35,8 @@ interface IState {
   myCategories: ICategory[];
 }
 
+const fixedItems = [0, 1];
+
 class Category extends React.Component<IProps, IState> {
   state = {
     myCategories: this.props.myCategories,
@@ -41,34 +45,108 @@ class Category extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     props.navigation.setOptions({
-        headerRight:() => <HeaderRightButton onSubmit={this.onSubmit}/>
+      headerRight: () => <HeaderRightButton onSubmit={this.onSubmit} />,
+    });
+  }
+
+  componentWillUnmount() {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'category/setState',
+      payload: {
+        isEdit: false,
+      },
     });
   }
 
   onSubmit = () => {
-      const {dispatch} = this.props;
-      dispatch({
-          type:'category/toogle'
-      });
-  }
+    const {dispatch} = this.props;
+    const {myCategories} = this.state;
+    dispatch({
+      type: 'category/toogle',
+      payload: {
+        myCategories,
+      },
+    });
+  };
 
-  renderItem = (item: ICategory, index: number) => {
-    return <CategoryItem data={item} />;
+  onLongPress = () => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'category/setState',
+      payload: {
+        isEdit: true,
+      },
+    });
+  };
+
+  onPress = (item: ICategory, index: number, isSelected: boolean) => {
+    const {isEdit} = this.props;
+    const {myCategories} = this.state;
+    if (isEdit) {
+      if (isSelected) {
+        const disable = fixedItems.indexOf(index) > -1;
+        if (disable) {
+          return;
+        } else {
+          this.setState({
+            myCategories: myCategories.filter(
+              selectedItem => selectedItem.id !== item.id,
+            ),
+          });
+        }
+      } else {
+        this.setState({
+          myCategories: myCategories.concat([item]),
+        });
+      }
+    }
+  };
+
+  renderSelectedItem = (item: ICategory, index: number) => {
+    const {isEdit} = this.props;
+    const disable = fixedItems.indexOf(index) > -1;
+    return (
+      <Touchable
+        key={item.id}
+        onPress={() => this.onPress(item, index, true)}
+        onLongPress={this.onLongPress}>
+        <CategoryItem
+          data={item}
+          disable={disable}
+          isEdit={isEdit}
+          selected={true}
+        />
+      </Touchable>
+    );
+  };
+  renderUnselectedItem = (item: ICategory, index: number) => {
+    const {isEdit} = this.props;
+    return (
+      <Touchable
+        key={item.id}
+        onPress={() => this.onPress(item, index, false)}
+        onLongPress={this.onLongPress}>
+        <CategoryItem
+          data={item}
+          disable={false}
+          isEdit={isEdit}
+          selected={false}
+        />
+      </Touchable>
+    );
   };
 
   render() {
     const {categories} = this.props;
     const {myCategories} = this.state;
     const classifyGroup = _.groupBy(categories, item => item.classify);
-    console.log('classifyGroup:', classifyGroup);
-
-    // console.log(`categories:${categories}, myCategories:${myCategories}`);
     return (
       <ScrollView style={styles.container}>
         <View>
           <Text style={styles.classifyName}>我的分类</Text>
           <View style={styles.classifyView}>
-            {myCategories.map(this.renderItem)}
+            {myCategories.map(this.renderSelectedItem)}
           </View>
         </View>
 
@@ -78,7 +156,16 @@ class Category extends React.Component<IProps, IState> {
               <View key={classify}>
                 <Text style={styles.classifyName}>{classify}</Text>
                 <View style={styles.classifyView}>
-                  {classifyGroup[classify].map(this.renderItem)}
+                  {classifyGroup[classify].map((item, index) => {
+                    if (
+                      myCategories.find(
+                        selectedItem => selectedItem.id === item.id,
+                      )
+                    ) {
+                      return null;
+                    }
+                    return this.renderUnselectedItem(item, index);
+                  })}
                 </View>
               </View>
             );
