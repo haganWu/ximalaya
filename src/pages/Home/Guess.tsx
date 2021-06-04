@@ -39,7 +39,7 @@ class Guess extends React.Component<IProps> {
 
   fetch = () => {
     const {dispatch, namespace} = this.props;
-    console.log('Guess fetch namespace:',namespace)
+    console.log('Guess fetch namespace:',namespace);
     dispatch({
       type: namespace + '/fetchGuess',
     });
@@ -59,6 +59,7 @@ class Guess extends React.Component<IProps> {
 
   render() {
     const {guesses} = this.props;
+    console.log('Guess guesses:',guesses)
     return (
       <View style={styles.container}>
         <View style={styles.header}>

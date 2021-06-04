@@ -106,6 +106,7 @@ const homeModel: HomeModel = {
     },
     *fetchGuess(_, {call, put}) {
       const {data} = yield call(axios.get, GUESS_URL);
+      console.log('home Guess data:',data)
       yield put({
         type: 'setState',
         payload: {

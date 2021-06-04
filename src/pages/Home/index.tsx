@@ -11,7 +11,6 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import {RootStackNavigation} from '@/navigator/index';
-import Detail from '../Detail';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 import Carousel, {sideHeight} from './Carousel';
@@ -20,8 +19,8 @@ import ChannelItem from './ChannelItem';
 import {IChannel} from '@/models/home';
 import IconFont from '@/assets/iconfont';
 import {hp} from '@/utils/index';
-import {RouteProp} from '@react-navigation/core';
 import {HomeParamList} from '@/navigator/HomeTabs';
+import { RouteProp } from '@react-navigation/native';
 
 const mapStateToProps = (
   state: RootState,

@@ -17,6 +17,7 @@ export type HomeParamList = {
     namespace: string;
   };
 };
+const Tab = createMaterialTopTabNavigator<HomeParamList>();
 
 const mapStateToProps = ({category}: RootState) => {
   return {
@@ -29,8 +30,6 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {}
-
-const Tab = createMaterialTopTabNavigator<HomeParamList>();
 
 class HomeTabs extends React.Component<IProps> {
   renderTabBar = (props: MaterialTopTabBarProps) => {
