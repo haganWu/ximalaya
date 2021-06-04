@@ -65,6 +65,9 @@ class Home extends React.Component<IProps, IState> {
     });
     dispatch({
       type: namespace + '/fetchChannels',
+      // payload: {
+      //   category: namespace,
+      // },
     });
   }
 
@@ -117,6 +120,7 @@ class Home extends React.Component<IProps, IState> {
       type: namespace + '/fetchChannels',
       payload: {
         loadMore: true,
+        // category: namespace,
       },
     });
   };

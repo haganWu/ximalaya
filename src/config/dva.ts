@@ -1,8 +1,8 @@
 import {create, Model} from 'dva-core-ts';
 import models from '@/models/index';
 import createLoading from 'dva-loading-ts';
-import modelExtend from 'dva-model-extend';
 import homeModel from '@/models/home';
+import modelExtend from 'dva-model-extend';
 
 //1.创建实例
 const app = create();

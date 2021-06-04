@@ -8,7 +8,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
   Alert,
   ListRenderItemInfo,
 } from 'react-native';
@@ -20,6 +19,7 @@ const mapStateToProps = ({home}: RootState) => {
     guesses: home.guesses,
   };
 };
+
 
 /**
  * connect()函数作用用于将 models中的home.ts文件中HomeModel中的state(即dva仓库)映射到 Home(本文件L15)组件中(通过函数mapStateToProps())
@@ -39,6 +39,7 @@ class Guess extends React.Component<IProps> {
 
   fetch = () => {
     const {dispatch, namespace} = this.props;
+    console.log('Guess fetch namespace:',namespace)
     dispatch({
       type: namespace + '/fetchGuess',
     });
