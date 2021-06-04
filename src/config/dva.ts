@@ -1,6 +1,8 @@
-import {create} from 'dva-core-ts';
+import {create, Model} from 'dva-core-ts';
 import models from '@/models/index';
 import createLoading from 'dva-loading-ts';
+import homeModel from '@/models/home';
+import modelExtend from 'dva-model-extend';
 
 //1.创建实例
 const app = create();
@@ -14,3 +16,4 @@ app.use(createLoading());
 app.start();
 //4.导出dva数据(仓库)
 export default app._store;
+

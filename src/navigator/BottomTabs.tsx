@@ -45,18 +45,18 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 // };
 
 function getHeaderTitle(routeName: string) {
-    switch (routeName) {
-      case 'HomeTabs':
-        return '首页';
-      case 'Listen':
-        return '我听';
-      case 'Found':
-        return '发现';
-      case 'Account':
-        return '账号';
-      default:
-        return '首页';
-    }
+  switch (routeName) {
+    case 'HomeTabs':
+      return '首页';
+    case 'Listen':
+      return '我听';
+    case 'Found':
+      return '发现';
+    case 'Account':
+      return '账号';
+    default:
+      return '首页';
+  }
 }
 
 interface IProps {

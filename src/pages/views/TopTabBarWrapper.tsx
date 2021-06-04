@@ -9,16 +9,13 @@ import Touchable from '@/components/Touchable';
 import LinearAnimatedGradientTransition from 'react-native-linear-animated-gradient-transition';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
-import {getActiveRouteName} from '@/utils/index';
 
-const mapStateToProps = (state: RootState, props: MaterialTopTabBarProps) => {
-  const routeName = getActiveRouteName(props.state);
-  const modelState = state[routeName];
+const mapStateToProps = ({home}: RootState) => {
   return {
-    gradientVisible: modelState.gradientVisible,
-    linearColors: modelState.carousels
-      ? modelState.carousels.length > 0
-        ? modelState.carousels[modelState.activeCarouselIndex].colors
+    gradientVisible: home.gradientVisible,
+    linearColors: home.carousels
+      ? home.carousels.length > 0
+        ? home.carousels[home.activeCarouselIndex].colors
         : undefined
       : undefined,
   };
@@ -117,9 +114,8 @@ const styles = StyleSheet.create({
   },
   categoryBtn: {
     paddingHorizontal: 10,
-    borderLeftWidth: 2 * StyleSheet.hairlineWidth,
-    borderLeftColor: '#fff',
-    marginLeft: 4,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderLeftColor: '#ccc',
   },
   searchContainer: {
     flexDirection: 'row',

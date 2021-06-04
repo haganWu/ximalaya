@@ -11,6 +11,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import {RootStackNavigation} from '@/navigator/index';
+import Detail from '../Detail';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 import Carousel, {sideHeight} from './Carousel';
@@ -19,24 +20,14 @@ import ChannelItem from './ChannelItem';
 import {IChannel} from '@/models/home';
 import IconFont from '@/assets/iconfont';
 import {hp} from '@/utils/index';
-import {HomeParamList} from '@/navigator/HomeTabs';
-import { RouteProp } from '@react-navigation/native';
 
-const mapStateToProps = (
-  state: RootState,
-  {route}: {route: RouteProp<HomeParamList, string>},
-) => {
-  const {namespace} = route.params;
-  const modelState = state[namespace];
-  return {
-    namespace,
-    carousels: modelState.carousels,
-    channels: modelState.channels,
-    hasMore: modelState.pagination.hasMore,
-    gradientVisible: modelState.gradientVisible,
-    loading: state.loading.effects[namespace + '/fetchChannels'],
-  };
-};
+const mapStateToProps = ({home, loading}: RootState) => ({
+  carousels: home.carousels,
+  channels: home.channels,
+  hasMore: home.pagination.hasMore,
+  gradientVisible: home.gradientVisible,
+  loading: loading.effects['home/fetchChannels'],
+});
 
 /**
  * connect()函数作用用于将 models中的home.ts文件中HomeModel中的state(即dva仓库)映射到 Home(本文件L15)组件中(通过函数mapStateToProps())
@@ -58,15 +49,12 @@ class Home extends React.Component<IProps, IState> {
     refreshing: false,
   };
   componentDidMount() {
-    const {dispatch, namespace} = this.props;
+    const {dispatch} = this.props;
     dispatch({
-      type: namespace + '/fetchCarousels',
+      type: 'home/fetchCarousels',
     });
     dispatch({
-      type: namespace + '/fetchChannels',
-      // payload: {
-      //   category: namespace,
-      // },
+      type: 'home/fetchChannels',
     });
   }
 
@@ -91,9 +79,9 @@ class Home extends React.Component<IProps, IState> {
       refreshing: true,
     });
     //2.获取数据
-    const {dispatch, namespace} = this.props;
+    const {dispatch} = this.props;
     dispatch({
-      type: namespace + '/fetchChannels',
+      type: 'home/fetchChannels',
       payload: {
         refreshing: true,
       },
@@ -111,15 +99,14 @@ class Home extends React.Component<IProps, IState> {
    * 上拉加载更多
    */
   onEndReached = () => {
-    const {dispatch, loading, hasMore, namespace} = this.props;
+    const {dispatch, loading, hasMore} = this.props;
     if (loading || !hasMore) {
       return;
     }
     dispatch({
-      type: namespace + '/fetchChannels',
+      type: 'home/fetchChannels',
       payload: {
         loadMore: true,
-        // category: namespace,
       },
     });
   };
@@ -134,10 +121,10 @@ class Home extends React.Component<IProps, IState> {
     // console.log(
     //   `offSetY:${offSetY},sideHeight:${sideHeight},newGradientVisible:${newGradientVisible},carouselHeight:${carouselHeight}`,
     // );
-    const {dispatch, gradientVisible, namespace} = this.props;
+    const {dispatch, gradientVisible} = this.props;
     if (gradientVisible !== newGradientVisible) {
       dispatch({
-        type: namespace + '/setState',
+        type: 'home/setState',
         payload: {
           gradientVisible: newGradientVisible,
         },
@@ -146,12 +133,11 @@ class Home extends React.Component<IProps, IState> {
   };
 
   get header() {
-    const {namespace} = this.props;
     return (
       <View>
         <Carousel />
         <View style={styles.background}>
-          <Guess namespace={namespace} />
+          <Guess />
         </View>
       </View>
     );

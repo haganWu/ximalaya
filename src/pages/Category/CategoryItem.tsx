@@ -3,52 +3,49 @@ import {viewportWidth} from '@/utils/index';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-const itemsOffset = 12;
-const parentWidth = viewportWidth - 5 * itemsOffset;
-const itemWidth = parentWidth / 4;
+export const margin = 5;
+export const parentWidth = viewportWidth - 2 * margin;
+export const itemWidth = parentWidth / 4;
+export const itemHeight = 48;
+
 
 interface IProps {
   isEdit: boolean;
   selected: boolean;
   data: ICategory;
-  disable: boolean;
+  disable?: boolean;
 }
 
 class CategoryItem extends React.Component<IProps> {
   render() {
     const {data, disable, isEdit, selected} = this.props;
     return (
-      <View
-        key={data.id}
-        style={[styles.renderItem, disable && styles.renderItemUnoperation]}>
-        <Text style={styles.itemName}>{data.name}</Text>
-        {isEdit && !disable && (
-          <View style={styles.icon}>
-            <Text style={styles.iconText}>{selected ? '-' : '+'}</Text>
-          </View>
-        )}
+      <View key={data.id} style={styles.itemWrapper}>
+        <View style={[styles.item, disable && styles.disabled]}>
+          <Text>{data.name}</Text>
+          {isEdit && !disable && (
+            <View style={styles.icon}>
+              <Text style={styles.iconText}>{selected ? '-' : '+'}</Text>
+            </View>
+          )}
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  renderItem: {
-    width: itemWidth,
+  itemWrapper: {width: itemWidth, height: itemHeight},
+  item: {
+    flex: 1,
     backgroundColor: '#fff',
-    height: 40,
+    margin: margin,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: itemsOffset,
-    marginTop: 6,
-    borderRadius: 6,
-    marginBottom: 8,
+    borderRadius: 4,
   },
-  renderItemUnoperation: {
+  disabled: {
     backgroundColor: '#ccc',
-  },
-  itemName: {
-    fontSize: 14,
   },
   icon: {
     position: 'absolute',
