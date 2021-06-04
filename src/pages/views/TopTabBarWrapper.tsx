@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
   },
   categoryBtn: {
     paddingHorizontal: 10,
-    borderLeftWidth: StyleSheet.hairlineWidth,
-    borderLeftColor: '#ccc',
+    borderLeftWidth: 2 * StyleSheet.hairlineWidth,
+    borderLeftColor: '#fff',
   },
   searchContainer: {
     flexDirection: 'row',
