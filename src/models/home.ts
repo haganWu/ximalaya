@@ -48,7 +48,7 @@ export interface IPagination {
 export interface HomeState {
   carousels: ICarousel[];
   activeCarouselIndex: number; //当前轮播图下标
-  gradientVisible:boolean;
+  gradientVisible: boolean;
   guesses: IGuess[];
   channels: IChannel[];
   pagination: IPagination;
@@ -72,7 +72,7 @@ interface HomeModel extends Model {
 const initialState = {
   carousels: [],
   activeCarouselIndex: 0,
-  gradientVisible:true,
+  gradientVisible: true,
   guesses: [],
   channels: [],
   pagination: {
@@ -106,6 +106,7 @@ const homeModel: HomeModel = {
     },
     *fetchGuess(_, {call, put}) {
       const {data} = yield call(axios.get, GUESS_URL);
+      console.log('home Guess data:',data)
       yield put({
         type: 'setState',
         payload: {
@@ -114,6 +115,7 @@ const homeModel: HomeModel = {
       });
     },
     *fetchChannels({callback, payload}, {call, put, select}) {
+      // console.log('payload.category:', payload.category);
       //获取历史数据
       let {channels, pagination} = yield select(
         (state: RootState) => state.home,
@@ -131,6 +133,7 @@ const homeModel: HomeModel = {
       const {data} = yield call(axios.get, CHANNEL_URL, {
         params: {
           page,
+          // category: payload.category,
         },
       });
       let newChannels = data.results;

@@ -8,6 +8,7 @@ import Home from '@/pages/Home';
 import {StyleSheet, View} from 'react-native';
 import TopTabBarWrapper from '@/pages/views/TopTabBarWrapper';
 
+
 const Tab = createMaterialTopTabNavigator();
 
 class HomeTabs extends React.Component {
@@ -16,7 +17,6 @@ class HomeTabs extends React.Component {
   };
 
   render() {
-    console.log('test git')
     return (
       <Tab.Navigator
         lazy

@@ -1925,7 +1925,7 @@ babel-preset-jest@^26.6.2:
     babel-plugin-jest-hoist "^26.6.2"
     babel-preset-current-node-syntax "^1.0.0"
 
-babel-runtime@^6.22.0:
+babel-runtime@^6.20.0, babel-runtime@^6.22.0:
   version "6.26.0"
   resolved "https://registry.nlark.com/babel-runtime/download/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -2699,6 +2699,13 @@ dva-loading-ts@^3.0.23:
   integrity sha1-KFnA5r5suxHwKIMfAD+zyEVraio=
   dependencies:
     "@babel/runtime" "^7.0.0"
+
+dva-model-extend@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/dva-model-extend/download/dva-model-extend-0.1.2.tgz#a3e615995feaaed5d141eb5b0a26cb98542a9820"
+  integrity sha1-o+YVmV/qrtXRQetbCibLmFQqmCA=
+  dependencies:
+    babel-runtime "^6.20.0"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -5919,11 +5926,6 @@ react-native-config@^1.4.2:
   version "1.4.2"
   resolved "https://registry.npm.taobao.org/react-native-config/download/react-native-config-1.4.2.tgz#cc39f22ed72c5cb06af1adf0ba70ef01593900b4"
   integrity sha1-zDnyLtcsXLBq8a3wunDvAVk5ALQ=
-
-react-native-drag-sort@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.npm.taobao.org/react-native-drag-sort/download/react-native-drag-sort-2.4.2.tgz#bf27a70f80b59d6f77e3caa2160fb0426a3f8627"
-  integrity sha1-vyenD4C1nW9348qiFg+wQmo/hic=
 
 react-native-gesture-handler@^1.10.3:
   version "1.10.3"
