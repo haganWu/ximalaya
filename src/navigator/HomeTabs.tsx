@@ -16,6 +16,7 @@ class HomeTabs extends React.Component {
   };
 
   render() {
+    console.log('test git')
     return (
       <Tab.Navigator
         lazy
