@@ -8,7 +8,6 @@ export const parentWidth = viewportWidth - 2 * margin;
 export const itemWidth = parentWidth / 4;
 export const itemHeight = 48;
 
-
 interface IProps {
   isEdit: boolean;
   selected: boolean;

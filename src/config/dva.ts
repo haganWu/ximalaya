@@ -17,3 +17,22 @@ app.start();
 //4.导出dva数据(仓库)
 export default app._store;
 
+interface Cached {
+  [key: string]: boolean;
+}
+
+const cached: Cached = {
+  home: true,
+};
+
+function registerModel(model: Model) {
+  if (!cached[model.namespace]) {
+    app.model(model);
+    cached[model.namespace] = true;
+  }
+}
+
+export function createHomeModel(namespace: string) {
+  const model = modelExtend(homeModel, {namespace});
+  registerModel(model);
+}

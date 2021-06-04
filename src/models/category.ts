@@ -107,7 +107,6 @@ const categoryModel: CategoryModel = {
     asyncStorage() {
       storage.sync.categories = async () => {
         const {data} = await axios.get(CATEGORY_URL);
-        console.log('data:', data);
         return data;
       };
       storage.sync.myCategories = async () => {

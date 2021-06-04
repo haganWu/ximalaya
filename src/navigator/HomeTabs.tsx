@@ -10,12 +10,15 @@ import TopTabBarWrapper from '@/pages/views/TopTabBarWrapper';
 import {RootState} from '../models';
 import {connect, ConnectedProps} from 'react-redux';
 import {ICategory} from '@/models/category';
+import {createHomeModel} from '@/config/dva';
 
-type HomeParamLists = {
-  [key: string]: undefined;
+export type HomeParamList = {
+  [key: string]: {
+    namespace: string;
+  };
 };
 
-const Tab = createMaterialTopTabNavigator<HomeParamLists>();
+const Tab = createMaterialTopTabNavigator<HomeParamList>();
 
 const mapStateToProps = ({category}: RootState) => {
   return {
@@ -35,6 +38,7 @@ class HomeTabs extends React.Component<IProps> {
   };
 
   renderScreen = (item: ICategory) => {
+    createHomeModel(item.id);
     return (
       <Tab.Screen
         key={item.id}
@@ -42,6 +46,9 @@ class HomeTabs extends React.Component<IProps> {
         component={Home}
         options={{
           tabBarLabel: item.name,
+        }}
+        initialParams={{
+          namespace: item.id,
         }}
       />
     );
