@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, RouteProp} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -7,9 +7,9 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import BottomTabs from './BottomTabs';
-import Detail from '@/pages/Detail';
-import {Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {Animated, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import Category from '@/pages/Category/index';
+import Album from '@/pages/Album/index';
 
 /**
  * 使用type约束泛型类型
@@ -19,8 +19,12 @@ export type RootStackParamList = {
     screen?: string;
   };
   Category: undefined;
-  Detail: {
-    id: number;
+  Album: {
+    item: {
+      id: string;
+      title: string;
+      image: string;
+    };
   };
 };
 
@@ -33,6 +37,31 @@ export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
  * }
  */
 const Stack = createStackNavigator<RootStackParamList>();
+
+function getAlbumOptions({
+  route,
+}: {
+  route: RouteProp<RootStackParamList, 'Album'>;
+}) {
+  return {
+    headerTitle: route.params.item.title,
+    headerTransparent: true, //标题栏透明
+    headerTitleStyle: {
+      opacity: 0, //标题透明
+    },
+    headerBackground: () => {
+      //设置标题栏背景
+      return <Animated.View style={styles.headerBackground} />;
+    },
+  };
+}
+const styles = StyleSheet.create({
+  headerBackground: {
+    flex: 1,
+    backgroundColor: '#fff',
+    opacity: 0, //标题透明
+  },
+});
 
 class Navigator extends React.Component {
   render() {
@@ -85,9 +114,9 @@ class Navigator extends React.Component {
           />
           {/* headerTitleAlign: 'left',  */}
           <Stack.Screen
-            options={{headerTitle: '详情页'}}
-            name="Detail"
-            component={Detail}
+            options={getAlbumOptions}
+            name="Album"
+            component={Album}
           />
         </Stack.Navigator>
       </NavigationContainer>

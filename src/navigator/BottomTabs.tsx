@@ -75,7 +75,6 @@ class BottomTabs extends React.Component<IProps> {
   setOptions = () => {
     const {navigation, route} = this.props;
     const routeName = getFocusedRouteNameFromRoute(route);
-    // console.log('routeName:', routeName);
     if (routeName === 'HomeTabs' || routeName === undefined) {
       navigation.setOptions({
         headerTransparent: true,

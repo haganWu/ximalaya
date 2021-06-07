@@ -8,8 +8,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
-  Alert,
   ListRenderItemInfo,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
@@ -32,6 +30,7 @@ type MadelState = ConnectedProps<typeof connector>;
 
 interface IProps extends MadelState {
   namespace: string;
+  goAlbum: (item: IGuess) => void;
 }
 
 class Guess extends React.Component<IProps> {
@@ -47,7 +46,8 @@ class Guess extends React.Component<IProps> {
   };
 
   onPress = (data: IGuess) => {
-    Alert.alert(data.title);
+    const {goAlbum} = this.props;
+    goAlbum(data);
   };
 
   renderItem = ({item}: ListRenderItemInfo<IGuess>) => {

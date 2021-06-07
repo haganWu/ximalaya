@@ -16,7 +16,7 @@ import {RootState} from '@/models/index';
 import Carousel, {sideHeight} from './Carousel';
 import Guess from './Guess';
 import ChannelItem from './ChannelItem';
-import {IChannel} from '@/models/home';
+import {IChannel, IGuess} from '@/models/home';
 import IconFont from '@/assets/iconfont';
 import {hp} from '@/utils/index';
 import {RouteProp} from '@react-navigation/native';
@@ -67,12 +67,13 @@ class Home extends React.Component<IProps, IState> {
     });
   }
 
-  onPress = (data: IChannel) => {
-    Alert.alert(data.title);
+  goAlbum = (data: IChannel | IGuess) => {
+    const {navigation} = this.props;
+    navigation.navigate('Album', {item: data});
   };
 
   renderItem = ({item}: ListRenderItemInfo<IChannel>) => {
-    return <ChannelItem data={item} onPress={this.onPress} />;
+    return <ChannelItem data={item} onPress={this.goAlbum} />;
   };
 
   keyExtractor = (item: IChannel) => {
@@ -142,9 +143,9 @@ class Home extends React.Component<IProps, IState> {
     const {namespace} = this.props;
     return (
       <View>
-        <Carousel namespace={namespace}/>
+        <Carousel namespace={namespace} />
         <View style={styles.background}>
-          <Guess namespace={namespace} />
+          <Guess namespace={namespace} goAlbum={this.goAlbum} />
         </View>
       </View>
     );
