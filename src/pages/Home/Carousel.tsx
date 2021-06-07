@@ -1,5 +1,5 @@
 import {RootState} from '@/models/index';
-import {ICarousel} from '@/models/home';
+import home, {ICarousel} from '@/models/home';
 import {viewportWidth, wp, hp} from '@/utils/index';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -21,10 +21,19 @@ const sideWidth = wp(90);
 export const sideHeight = hp(26);
 const itemWidth = sideWidth + wp(2) * 2;
 
-const mapStateToProps = ({home}: RootState) => ({
-  data: home.carousels,
-  activeCarouselIndex: home.activeCarouselIndex,
-});
+// const mapStateToProps = ({home}: RootState) => ({
+//   data: home.carousels,
+//   activeCarouselIndex: home.activeCarouselIndex,
+// });
+
+const mapStateToProps = (state: RootState, {namespace}: any) => {
+  const modelState = state[namespace];
+  return {
+    namespace,
+    data: modelState.carousels,
+    activeCarouselIndex: modelState.activeCarouselIndex,
+  };
+};
 
 /**
  * connect()函数作用用于将 models中的home.ts文件中HomeModel中的state(即dva仓库)映射到 Home(本文件L15)组件中(通过函数mapStateToProps())

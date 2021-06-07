@@ -15,9 +15,11 @@ import {
 import {connect, ConnectedProps} from 'react-redux';
 import GuessItem from './GuessItem';
 
-const mapStateToProps = ({home}: RootState) => {
+const mapStateToProps = (state: RootState, {namespace}: any) => {
+  const modelState = state[namespace];
   return {
-    guesses: home.guesses,
+    namespace,
+    guesses: modelState.guesses,
   };
 };
 

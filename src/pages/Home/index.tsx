@@ -127,9 +127,6 @@ class Home extends React.Component<IProps, IState> {
     const offSetY = nativeEvent.contentOffset.y;
     const carouselHeight = sideHeight ? sideHeight : hp(26);
     let newGradientVisible = offSetY < carouselHeight;
-    // console.log(
-    //   `offSetY:${offSetY},sideHeight:${sideHeight},newGradientVisible:${newGradientVisible},carouselHeight:${carouselHeight}`,
-    // );
     const {dispatch, gradientVisible, namespace} = this.props;
     if (gradientVisible !== newGradientVisible) {
       dispatch({
@@ -145,7 +142,7 @@ class Home extends React.Component<IProps, IState> {
     const {namespace} = this.props;
     return (
       <View>
-        <Carousel />
+        <Carousel namespace={namespace}/>
         <View style={styles.background}>
           <Guess namespace={namespace} />
         </View>
