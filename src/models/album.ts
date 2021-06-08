@@ -7,7 +7,7 @@ const ALBUM_URL = '/mock/11/hagan/album/list';
 /**
  * 节目Bean
  */
-interface IProgram {
+ export interface IProgram {
   id: string;
   title: string;
   playVolume: number;

@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RouteProp} from '@react-navigation/core';
 import {RootStackParamList} from '@/navigator/index';
 import {BlurView} from '@react-native-community/blur';
+import Tab from './Tab';
 
 const mapStateToProps = ({album}: RootState) => {
   return {
@@ -41,7 +42,11 @@ class Album extends React.Component<IProps> {
     return (
       <View style={[styles.headerContainer, {paddingTop: headerHeight}]}>
         <Image style={styles.backgroundPic} source={{uri: image}} />
-        <BlurView blurType='light' blurAmount={2} style={StyleSheet.absoluteFillObject} />
+        <BlurView
+          blurType="light"
+          blurAmount={2}
+          style={StyleSheet.absoluteFillObject}
+        />
         <View style={styles.leftView}>
           <Image style={styles.thumbnail} source={{uri: image}} />
         </View>
@@ -63,13 +68,20 @@ class Album extends React.Component<IProps> {
   };
 
   render() {
-    // const {headerHeight, summary, author, route} = this.props;
     // const {title, image} = route.params.item;
-    return <View>{this.renderHeader()}</View>;
+    return (
+      <View style={styles.container}>
+        {this.renderHeader()}
+        <Tab />
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   headerContainer: {
     height: 260,
     flexDirection: 'row',
@@ -94,9 +106,9 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   titleText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
-    fontWeight: '900',
+    fontWeight: 'bold',//加粗
   },
   titleSummary: {
     fontSize: 14,
