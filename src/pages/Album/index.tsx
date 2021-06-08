@@ -5,8 +5,7 @@ import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
 import {RouteProp} from '@react-navigation/core';
 import {RootStackParamList} from '@/navigator/index';
-import IconFont from '@/assets/iconfont';
-import {head} from 'lodash';
+import {BlurView} from '@react-native-community/blur';
 
 const mapStateToProps = ({album}: RootState) => {
   return {
@@ -42,6 +41,7 @@ class Album extends React.Component<IProps> {
     return (
       <View style={[styles.headerContainer, {paddingTop: headerHeight}]}>
         <Image style={styles.backgroundPic} source={{uri: image}} />
+        <BlurView blurType='light' blurAmount={2} style={StyleSheet.absoluteFillObject} />
         <View style={styles.leftView}>
           <Image style={styles.thumbnail} source={{uri: image}} />
         </View>
