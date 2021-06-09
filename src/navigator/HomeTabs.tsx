@@ -11,6 +11,7 @@ import {RootState} from '../models';
 import {connect, ConnectedProps} from 'react-redux';
 import {ICategory} from '@/models/category';
 import {createHomeModel} from '@/config/dva';
+import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
 
 export type HomeParamList = {
   [key: string]: {
@@ -60,6 +61,7 @@ class HomeTabs extends React.Component<IProps> {
       <Tab.Navigator
         lazy
         tabBar={this.renderTabBar}
+        // pager={props => <ViewPagerAdapter {...props} />}
         sceneContainerStyle={styles.sceneContainer}
         tabBarOptions={{
           scrollEnabled: true,
