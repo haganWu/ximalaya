@@ -25,6 +25,7 @@ export type RootStackParamList = {
       title: string;
       image: string;
     };
+    opacity?: Animated.Value; //设置列表上拉时标题栏的透明度
   };
 };
 
@@ -47,11 +48,15 @@ function getAlbumOptions({
     headerTitle: route.params.item.title,
     headerTransparent: true, //标题栏透明
     headerTitleStyle: {
-      opacity: 0, //标题透明
+      opacity: route.params.opacity, //标题透明  设置列表上拉时标题栏的透明度
     },
     headerBackground: () => {
-      //设置标题栏背景
-      return <Animated.View style={styles.headerBackground} />;
+      //设置标题栏背景   设置列表上拉时标题栏的透明度
+      return (
+        <Animated.View
+          style={[styles.headerBackground, {opacity: route.params.opacity}]}
+        />
+      );
     },
   };
 }

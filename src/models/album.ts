@@ -70,7 +70,7 @@ const albumModel: AlbumModel = {
   state: initialState,
   effects: {
     *fetchAlbum({payload}, {call, put}) {
-      console.log('payload.id,:', payload.id);
+      // console.log('payload.id,:', payload.id);
       const {data} = yield call(axios.get, ALBUM_URL, {
         params: {
           id: payload.id,

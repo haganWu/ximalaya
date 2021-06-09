@@ -1,9 +1,10 @@
 import {IProgram} from '@/models/album';
 import {RootState} from '@/models/index';
 import React from 'react';
-import {ListRenderItemInfo, StyleSheet} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {Animated, ListRenderItemInfo, StyleSheet} from 'react-native';
+import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
+import {ITabProps} from '../Tab';
 import Item from './Item';
 
 const mapStateToProps = ({album}: RootState) => {
@@ -16,11 +17,11 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-interface IProps extends ModelState {}
+type IProps = ModelState & ITabProps;
 
 class List extends React.Component<IProps> {
   onPress = (data: IProgram) => {
-    console.log('data:', data);
+    // console.log('data:', data);
   };
 
   renderItem = ({item, index}: ListRenderItemInfo<IProgram>) => {
@@ -32,14 +33,25 @@ class List extends React.Component<IProps> {
   };
 
   render() {
-    const {list} = this.props;
+    const {list, panRef, tapRef, nativeRef,onScrollDrag} = this.props;
+    console.log('List/index -> panRef:', panRef);
+    console.log('List/index -> tapRef:', tapRef);
+    console.log('List/index -> nativeRef:', nativeRef);
     return (
-      <FlatList
-        style={styles.flatList}
-        data={list}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-      />
+      <NativeViewGestureHandler
+        simultaneousHandlers={[panRef]}
+        waitFor={tapRef}
+        ref={nativeRef}>
+        <Animated.FlatList
+          style={styles.flatList}
+          data={list}
+          bounces={false}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+          onScrollBeginDrag={onScrollDrag}
+          onScrollEndDrag={onScrollDrag}
+        />
+      </NativeViewGestureHandler>
     );
   }
 }
