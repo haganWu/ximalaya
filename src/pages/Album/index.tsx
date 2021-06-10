@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Animated,
   Image,
   NativeScrollEvent,
@@ -12,7 +13,11 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
 import {RouteProp} from '@react-navigation/core';
-import {RootStackNavigation, RootStackParamList} from '@/navigator/index';
+import {
+  ModelStackNavigation,
+  RootStackNavigation,
+  RootStackParamList,
+} from '@/navigator/index';
 import {BlurView} from '@react-native-community/blur';
 import Tab from './Tab';
 import {
@@ -23,11 +28,13 @@ import {
   TapGestureHandler,
 } from 'react-native-gesture-handler';
 import {viewportHeight} from '@/utils/index';
+import {IProgram} from '@/models/album';
 
 const mapStateToProps = ({album}: RootState) => {
   return {
     summary: album.summary,
     author: album.author,
+    list: album.list,
   };
 };
 
@@ -39,7 +46,7 @@ type MadelState = ConnectedProps<typeof connector>;
 interface IProps extends MadelState {
   headerHeight: number;
   route: RouteProp<RootStackParamList, 'Album'>;
-  navigation: RootStackNavigation;//设置列表上拉时标题栏的透明度
+  navigation: ModelStackNavigation; //设置列表上拉时标题栏的透明度
 }
 
 const USE_NATIVE_DRIVER = true;
@@ -51,7 +58,6 @@ class Album extends React.Component<IProps> {
   nativeRef = React.createRef<NativeViewGestureHandler>();
   RANGE = [-(HEADER_HEIGHT - this.props.headerHeight), 0];
   translationY = new Animated.Value(0);
-
   lastScrollY = new Animated.Value(0);
   lastScrollYValue = 0;
   reverseLastScrollY = Animated.multiply(
@@ -99,11 +105,16 @@ class Album extends React.Component<IProps> {
   //   console.log('event:', event.nativeEvent.translationY);
   // };
 
+  onItemPress = (data: IProgram, index: number) => {
+    const {navigation} = this.props;
+    navigation.navigate('Detail');
+  };
+
   /**
    * onScrollDrag 解决列表下拉时[页面头部]部分跟着下滑(实际效果应是列表下拉至[列表顶部]列表第一条数据时再下拉[页面头部]部分才下滑)
    */
   onScrollDrag = Animated.event(
-    [{nativeEvent: {contentOffset: {y: this.lastScrollY}}}], //y:FlatList滚动的值
+    [{nativeEvent: {contentOffset: {y: this.lastScrollY}}}],
     {
       useNativeDriver: USE_NATIVE_DRIVER,
       listener: ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -143,16 +154,14 @@ class Album extends React.Component<IProps> {
         this.translationYValue = this.RANGE[0];
         Animated.timing(this.translationYOffset, {
           toValue: this.RANGE[0],
-          duration: 1000,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }).start();
         maxDeltaY = this.RANGE[1];
       } else if (this.translationYValue > this.RANGE[1]) {
         this.translationYValue = this.RANGE[1];
         Animated.timing(this.translationYOffset, {
           toValue: this.RANGE[1],
-          duration: 1000,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }).start();
         maxDeltaY = -this.RANGE[0];
       }
@@ -244,13 +253,14 @@ class Album extends React.Component<IProps> {
               {this.renderHeader()}
               <View
                 style={{
-                  height: viewportHeight /* - this.props.headerHeight */,
+                  height: viewportHeight - this.props.headerHeight,
                 }}>
                 <Tab
                   panRef={this.panRef}
                   tapRef={this.tapRef}
                   nativeRef={this.nativeRef}
                   onScrollDrag={this.onScrollDrag}
+                  onItemPress={this.onItemPress}
                 />
               </View>
             </Animated.View>

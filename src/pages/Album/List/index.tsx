@@ -1,7 +1,7 @@
 import {IProgram} from '@/models/album';
 import {RootState} from '@/models/index';
 import React from 'react';
-import {Animated, ListRenderItemInfo, StyleSheet} from 'react-native';
+import {Alert, Animated, ListRenderItemInfo, StyleSheet} from 'react-native';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {ITabProps} from '../Tab';
@@ -20,8 +20,9 @@ type ModelState = ConnectedProps<typeof connector>;
 type IProps = ModelState & ITabProps;
 
 class List extends React.Component<IProps> {
-  onPress = (data: IProgram) => {
-    // console.log('data:', data);
+  onPress = (data: IProgram, index: number) => {
+    const {onItemPress} = this.props;
+    onItemPress(data, index);
   };
 
   renderItem = ({item, index}: ListRenderItemInfo<IProgram>) => {
@@ -33,15 +34,12 @@ class List extends React.Component<IProps> {
   };
 
   render() {
-    const {list, panRef, tapRef, nativeRef,onScrollDrag} = this.props;
-    console.log('List/index -> panRef:', panRef);
-    console.log('List/index -> tapRef:', tapRef);
-    console.log('List/index -> nativeRef:', nativeRef);
+    const {list, panRef, tapRef, nativeRef, onScrollDrag} = this.props;
     return (
       <NativeViewGestureHandler
         simultaneousHandlers={[panRef]}
-        waitFor={tapRef}
-        ref={nativeRef}>
+        ref={nativeRef}
+        waitFor={tapRef}>
         <Animated.FlatList
           style={styles.flatList}
           data={list}
