@@ -13,11 +13,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
 import {RouteProp} from '@react-navigation/core';
-import {
-  ModelStackNavigation,
-  RootStackNavigation,
-  RootStackParamList,
-} from '@/navigator/index';
+import {ModelStackNavigation, RootStackParamList} from '@/navigator/index';
 import {BlurView} from '@react-native-community/blur';
 import Tab from './Tab';
 import {
@@ -107,7 +103,7 @@ class Album extends React.Component<IProps> {
 
   onItemPress = (data: IProgram, index: number) => {
     const {navigation} = this.props;
-    navigation.navigate('Detail');
+    navigation.navigate('Detail', {id: data.id});
   };
 
   /**

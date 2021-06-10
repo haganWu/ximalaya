@@ -11,7 +11,6 @@ import {RootState} from '../models';
 import {connect, ConnectedProps} from 'react-redux';
 import {ICategory} from '@/models/category';
 import {createHomeModel} from '@/config/dva';
-import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
 
 export type HomeParamList = {
   [key: string]: {

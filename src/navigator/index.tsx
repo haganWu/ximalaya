@@ -11,7 +11,7 @@ import BottomTabs from './BottomTabs';
 import {Animated, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import Category from '@/pages/Category/index';
 import Album from '@/pages/Album/index';
-import Detail from '@/pages/Album/Detail';
+import Detail from '@/pages/Detail/index';
 import IconFont from '@/assets/iconfont';
 
 /**
@@ -119,7 +119,9 @@ function RootStackScreen() {
 
 export type ModelStackParamList = {
   Root: undefined;
-  Detail: undefined;
+  Detail: {
+    id: string;
+  };
 };
 
 const ModelStack = createStackNavigator<ModelStackParamList>();
