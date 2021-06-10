@@ -6011,6 +6011,11 @@ react-native-screens@^3.2.0:
   resolved "https://registry.nlark.com/react-native-screens/download/react-native-screens-3.2.0.tgz#e2c8a4879c72f49af5b49e8859c84978a95d112b"
   integrity sha1-4sikh5xy9Jr1tJ6IWchJeKldESs=
 
+react-native-slider-x@^0.11.3:
+  version "0.11.3"
+  resolved "https://registry.nlark.com/react-native-slider-x/download/react-native-slider-x-0.11.3.tgz#a1a7561e807c5d38019e9bdffbef2cd2e75ef7e9"
+  integrity sha1-oadWHoB8XTgBnpvf++8s0ude9+k=
+
 react-native-snap-carousel@^3.9.1:
   version "3.9.1"
   resolved "https://registry.npm.taobao.org/react-native-snap-carousel/download/react-native-snap-carousel-3.9.1.tgz#6fd9bd8839546c2c6043a41d2035afbc6fe0443e"

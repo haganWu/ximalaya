@@ -1,3 +1,4 @@
+import {number} from 'echarts';
 import {reject} from 'lodash';
 import Sound from 'react-native-sound';
 
@@ -40,7 +41,7 @@ const play = () => {
         }
 
         //释放资源
-        sound.release();
+        // sound.release();
       });
     } else {
       reject();
@@ -66,8 +67,8 @@ const pause = () => {
 /**
  * 获取当前播放时间
  */
-const getCurrentTime = () => {
-  return new Promise<number>(resolve => {
+const getCurrentTime = (): Promise<number> => {
+  return new Promise(resolve => {
     if (sound && sound.isLoaded()) {
       sound.getCurrentTime(resolve);
     } else {
@@ -79,10 +80,12 @@ const getCurrentTime = () => {
 /**
  * 获取音频时长
  */
-const getDuration = () => {
+const getDuration = (): number => {
   if (sound) {
-    return sound.getDuration;
+    console.log('getDuration-->成功返回:', sound.getDuration);
+    return sound.getDuration();
   }
+  console.log('getDuration-->异常返回:', 0);
   return 0;
 };
 

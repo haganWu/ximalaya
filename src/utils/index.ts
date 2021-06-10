@@ -28,4 +28,31 @@ function getActiveRouteName(state: NavigationState) {
   return route.name;
 }
 
-export {viewportWidth, viewportHeight, wp, hp, getActiveRouteName};
+function getCurrenDate() {
+  var date = new Date();
+  var year = date.getFullYear().toString();
+  var month = (date.getMonth() + 1).toString();
+  var day = date.getDate().toString();
+  var hour = date.getHours().toString();
+  var minute = date.getMinutes().toString();
+  var second = date.getSeconds().toString();
+
+  const result = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
+  return result;
+}
+
+function formatTime(seconds: number) {
+  const m = parseInt((seconds % (60 * 60)) / 60 + ',10');
+  const s = parseInt((seconds % 60) + ',10');
+  return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+}
+
+export {
+  viewportWidth,
+  viewportHeight,
+  wp,
+  hp,
+  getActiveRouteName,
+  getCurrenDate,
+  formatTime,
+};
