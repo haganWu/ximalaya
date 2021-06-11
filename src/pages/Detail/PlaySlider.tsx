@@ -1,5 +1,5 @@
 import {RootState} from '@/models/index';
-import {formatTime} from '@/utils/';
+import {formatTime} from '@/utils/index';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Slider from 'react-native-slider-x';
@@ -48,6 +48,7 @@ class PlaySlider extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
+    width: '90%',
     margin: 10,
   },
   thumb: {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Alert,
   Animated,
   Image,
   NativeScrollEvent,
@@ -102,7 +101,21 @@ class Album extends React.Component<IProps> {
   // };
 
   onItemPress = (data: IProgram, index: number) => {
-    const {navigation} = this.props;
+    const {navigation, dispatch, list} = this.props;
+    const previousItem = list[index - 1];
+    const nextItem = list[index + 1];
+    dispatch({
+      type: 'player/setState',
+      payload: {
+        previousId: previousItem ? previousItem.id : '',
+        nextId: nextItem ? nextItem.id : '',
+        title:data.title,
+        sounds: list.map(item => ({
+          id: item.id,
+          title: item.title,
+        })),
+      },
+    });
     navigation.navigate('Detail', {id: data.id});
   };
 
