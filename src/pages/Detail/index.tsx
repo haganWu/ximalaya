@@ -2,9 +2,11 @@ import IconFont from '@/assets/iconfont';
 import Touchable from '@/components/Touchable';
 import {RootState} from '@/models/index';
 import {ModelStackNavigation, ModelStackParamList} from '@/navigator/index';
+import {viewportWidth} from '@/utils/index';
 import {RouteProp} from '@react-navigation/native';
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Animated, Image, StyleSheet, Text, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {connect, ConnectedProps} from 'react-redux';
 import PlaySlider from './PlaySlider';
 
@@ -27,7 +29,18 @@ interface IProps extends ModelState {
   navigation: ModelStackNavigation;
 }
 
-class Detail extends React.Component<IProps> {
+interface IState {
+  barrage: boolean;
+}
+
+const IMAGE_SIZE = 180;
+const PADDING_TOP = (viewportWidth - IMAGE_SIZE) / 2;
+const SCALE = viewportWidth / IMAGE_SIZE;
+class Detail extends React.Component<IProps, IState> {
+  state = {
+    barrage: false,
+  };
+  anim = new Animated.Value(1);
   componentDidMount() {
     const {dispatch, route, navigation, title} = this.props;
     dispatch({
@@ -74,9 +87,6 @@ class Detail extends React.Component<IProps> {
       dispatch({
         type: 'player/play',
       });
-      // dispatch({
-      //   type: 'player/watcherCurrentTime',
-      // });
     }
   };
 
@@ -99,13 +109,42 @@ class Detail extends React.Component<IProps> {
     });
   };
 
+  barragePress = () => {
+    this.setState({
+      barrage: !this.state.barrage,
+    });
+    Animated.timing(this.anim, {
+      toValue: this.state.barrage ? 1 : SCALE,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
   render() {
+    const {barrage} = this.state;
     const {playState, thumbnailUrl, previousId, nextId} = this.props;
     return (
       <View style={styles.container}>
-        <Image style={styles.image} source={{uri: thumbnailUrl}} />
+        <View style={styles.imageView}>
+          <Animated.Image
+            style={[styles.image, {transform: [{scale: this.anim}]}]}
+            source={{uri: thumbnailUrl}}
+          />
+        </View>
 
-        <Text style={styles.tanmu}>弹幕</Text>
+        {barrage && (
+          <LinearGradient
+            colors={['rgba(128,104,102,0.5)', '#807c66']}
+            style={styles.LinearGradient}
+          />
+        )}
+
+        <Touchable
+          style={styles.barrageBtn}
+          disabled={!previousId}
+          onPress={this.barragePress}>
+          <Text style={styles.barrageText}>弹幕</Text>
+        </Touchable>
 
         <PlaySlider />
 
@@ -114,7 +153,7 @@ class Detail extends React.Component<IProps> {
             <IconFont name={'iconnext'} size={30} color="#fff" />
           </Touchable>
 
-          <Touchable style={styles.toggle} onPress={this.toggle}>
+          <Touchable onPress={this.toggle}>
             <IconFont
               name={playState === 'playing' ? 'iconstop' : 'iconbofang'}
               size={30}
@@ -133,31 +172,44 @@ class Detail extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 100,
+    paddingTop: PADDING_TOP,
+  },
+  imageView: {
     alignItems: 'center',
+    height: IMAGE_SIZE,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: IMAGE_SIZE,
+    height: IMAGE_SIZE,
     borderRadius: 8,
+    backgroundColor: '#ccc',
   },
-  tanmu: {
-    color: 'white',
-    fontSize: 16,
-    borderColor: 'white',
-    borderRadius: 20,
+  barrageBtn: {
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderColor: '#fff',
+    paddingVertical: 1,
     borderWidth: 1,
-    width: 60,
-    textAlign: 'center',
-    padding: 2,
+    marginLeft: 10,
+  },
+  barrageText: {
+    color: '#fff',
   },
   bottomContainer: {
     flexDirection: 'row',
     marginTop: 12,
-    // justifyContent:'space-between',//分散布局
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 15,
+    marginHorizontal: 80,
   },
-  toggle: {
-    marginHorizontal: 60,
+  LinearGradient: {
+    position: 'absolute',
+    top: 0,
+    height: viewportWidth,
+    width: viewportWidth,
   },
 });
 

@@ -48,7 +48,6 @@ class PlaySlider extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
     margin: 10,
   },
   thumb: {
