@@ -1,14 +1,37 @@
 import IconFont from '@/assets/iconfont';
+import Barrage, {Message} from '@/components/Barrage';
 import Touchable from '@/components/Touchable';
 import {RootState} from '@/models/index';
 import {ModelStackNavigation, ModelStackParamList} from '@/navigator/index';
-import {viewportWidth} from '@/utils/index';
+import {randomIndex, viewportWidth} from '@/utils/index';
 import {RouteProp} from '@react-navigation/native';
 import React from 'react';
 import {Animated, Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {connect, ConnectedProps} from 'react-redux';
 import PlaySlider from './PlaySlider';
+
+const data: string[] = [
+  '最灵繁的人也看不见自己的背脊',
+  '朝闻道，夕死可矣',
+  '阅读是人类进步的阶梯',
+  '内外相应，言行相称',
+  '人的一生是短的',
+  '抛弃时间的人，时间也抛弃他',
+  '自信在于沉稳',
+  '过犹不及',
+  '开卷有益',
+  '有志者事竟成',
+  '合理安排时间，就等于节约时间',
+  '成功源于不懈的努力',
+  '业余爱好是挖坟',
+  '当你凝视深渊',
+  '深渊也在凝视你',
+];
+
+function getText() {
+  return data[randomIndex(data.length)];
+}
 
 const mapStateToProps = ({player}: RootState) => {
   return {
@@ -31,6 +54,7 @@ interface IProps extends ModelState {
 
 interface IState {
   barrage: boolean;
+  barrageData: Message[];
 }
 
 const IMAGE_SIZE = 180;
@@ -39,6 +63,7 @@ const SCALE = viewportWidth / IMAGE_SIZE;
 class Detail extends React.Component<IProps, IState> {
   state = {
     barrage: false,
+    barrageData: [],
   };
   anim = new Animated.Value(1);
   componentDidMount() {
@@ -55,6 +80,7 @@ class Detail extends React.Component<IProps, IState> {
     navigation.setOptions({
       headerTitle: title,
     });
+    this.addBarrage();
   }
   /**
    * @description 解决点击上一首/下一首 标题不更新问题
@@ -73,6 +99,23 @@ class Detail extends React.Component<IProps, IState> {
       type: 'player/pause',
     });
   }
+
+  /**
+   * 添加弹幕
+   */
+  addBarrage = () => {
+    //定时器  每隔1s钟执行一次
+    setInterval(() => {
+      const {barrage} = this.state;
+      if (barrage) {
+        const id = Date.now();
+        const title = getText();
+        this.setState({
+          barrageData: [{id, title}],
+        });
+      }
+    }, 1000);
+  };
 
   /**
    * 暂停/播放
@@ -121,7 +164,7 @@ class Detail extends React.Component<IProps, IState> {
   };
 
   render() {
-    const {barrage} = this.state;
+    const {barrage, barrageData} = this.state;
     const {playState, thumbnailUrl, previousId, nextId} = this.props;
     return (
       <View style={styles.container}>
@@ -133,10 +176,13 @@ class Detail extends React.Component<IProps, IState> {
         </View>
 
         {barrage && (
-          <LinearGradient
-            colors={['rgba(128,104,102,0.5)', '#807c66']}
-            style={styles.LinearGradient}
-          />
+          <React.Fragment>
+            <LinearGradient
+              colors={['rgba(128,104,102,0.5)', '#807c66']}
+              style={styles.LinearGradient}
+            />
+            <Barrage data={barrageData} maxTrack={5}/>
+          </React.Fragment>
         )}
 
         <Touchable

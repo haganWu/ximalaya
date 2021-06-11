@@ -10,8 +10,6 @@ import {
   play,
   stop,
 } from '@/config/sound';
-import {call} from 'react-native-reanimated';
-import {getCurrenDate} from '../utils';
 
 /**
  * 节目(播放页面数据)接口

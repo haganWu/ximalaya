@@ -47,6 +47,13 @@ function formatTime(seconds: number) {
   return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
 }
 
+/**
+ * 获取随机数
+ */
+function randomIndex(length: number) {
+  return Math.floor(Math.random() * length);
+}
+
 export {
   viewportWidth,
   viewportHeight,
@@ -55,4 +62,5 @@ export {
   getActiveRouteName,
   getCurrenDate,
   formatTime,
+  randomIndex,
 };
