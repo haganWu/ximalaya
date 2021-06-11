@@ -114,7 +114,7 @@ class Detail extends React.Component<IProps, IState> {
           barrageData: [{id, title}],
         });
       }
-    }, 1000);
+    }, 200);
   };
 
   /**
@@ -170,7 +170,11 @@ class Detail extends React.Component<IProps, IState> {
       <View style={styles.container}>
         <View style={styles.imageView}>
           <Animated.Image
-            style={[styles.image, {transform: [{scale: this.anim}]}]}
+            style={[
+              styles.image,
+              {borderRadius: barrage ? 0 : 8},
+              {transform: [{scale: this.anim}]},
+            ]}
             source={{uri: thumbnailUrl}}
           />
         </View>
@@ -181,7 +185,7 @@ class Detail extends React.Component<IProps, IState> {
               colors={['rgba(128,104,102,0.5)', '#807c66']}
               style={styles.LinearGradient}
             />
-            <Barrage data={barrageData} maxTrack={5}/>
+            <Barrage data={barrageData} maxTrack={5} style={styles.barrage} />
           </React.Fragment>
         )}
 
@@ -256,6 +260,9 @@ const styles = StyleSheet.create({
     top: 0,
     height: viewportWidth,
     width: viewportWidth,
+  },
+  barrage: {
+    marginTop: PADDING_TOP,
   },
 });
 

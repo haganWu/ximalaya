@@ -1,11 +1,11 @@
 import {viewportWidth} from '@/utils/index';
 import React from 'react';
-import {Animated, Easing, Text} from 'react-native';
-import {Message} from '.';
+import {Animated, Easing, StyleSheet, Text} from 'react-native';
+import {IBarrage, Message} from '.';
 
 interface IProps {
-  data: Message;
-  outside: (data: Message) => void;
+  data: IBarrage;
+  outside: (data: IBarrage) => void;
 }
 
 class Item extends React.PureComponent<IProps> {
@@ -22,27 +22,38 @@ class Item extends React.PureComponent<IProps> {
         outside(data);
       }
     });
+    this.translateX.addListener(({value}) => {
+      if (value > 3) {
+        data.isFree = true;
+      }
+    });
   }
   render() {
     const {data} = this.props;
+    const width = data.title.length * 15;
     return (
       <Animated.View
         style={{
-          position: 'absolute',//设置弹幕位置
-          top: Math.random() * 100,
+          position: 'absolute', //设置弹幕位置
+          top: data.trackIndex * 30,
           transform: [
             {
               translateX: this.translateX.interpolate({
                 inputRange: [0, 10],
-                outputRange: [viewportWidth, 0],
+                outputRange: [viewportWidth, -width],
               }),
             },
           ],
         }}>
-        <Text>{data.title}</Text>
+        <Text style={styles.barrageText}>{data.title}</Text>
       </Animated.View>
     );
   }
 }
-
+const styles = StyleSheet.create({
+  barrageText: {
+    color: 'pink',
+    fontSize: 15,
+  },
+});
 export default Item;
