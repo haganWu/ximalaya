@@ -12,10 +12,13 @@ import Account from '@/pages/Account';
 import {RootStackNavigation, RootStackParamList} from '.';
 import IconFont from '@/assets/iconfont';
 import HomeTabs from './HomeTabs';
+import Play from '@/pages/views/Play';
+import Detail from '@/pages/Detail';
 
 export type BottomTabParamList = {
   HomeTabs: undefined;
   Listen: undefined;
+  Play: undefined;
   Found: undefined;
   Account: undefined;
 };
@@ -112,6 +115,16 @@ class BottomTabs extends React.Component<IProps> {
             tabBarIcon: ({color, size}) => (
               <IconFont name="iconwoting" color={color} size={size} />
             ),
+          }}
+        />
+        <Tab.Screen
+          name="Play"
+          component={Play}
+          options={{
+            title: '',
+            tabBarIcon: () => {
+              return <Play />;
+            },
           }}
         />
         <Tab.Screen

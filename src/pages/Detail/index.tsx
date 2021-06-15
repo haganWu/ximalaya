@@ -93,12 +93,12 @@ class Detail extends React.Component<IProps, IState> {
       });
     }
   }
-  componentWillUnmount() {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'player/pause',
-    });
-  }
+  // componentWillUnmount() {
+  //   const {dispatch} = this.props;
+  //   dispatch({
+  //     type: 'player/pause',
+  //   });
+  // }
 
   /**
    * 添加弹幕
@@ -209,7 +209,7 @@ class Detail extends React.Component<IProps, IState> {
           <Text style={styles.barrageText}>弹幕</Text>
         </Touchable>
 
-        <PlaySlider skipProgress={this.skipProgress}  />
+        <PlaySlider skipProgress={this.skipProgress} />
 
         <View style={styles.bottomContainer}>
           <Touchable disabled={!previousId} onPress={this.previousPress}>
@@ -218,7 +218,7 @@ class Detail extends React.Component<IProps, IState> {
 
           <Touchable onPress={this.toggle}>
             <IconFont
-              name={playState === 'playing' ? 'iconstop' : 'iconbofang'}
+              name={playState === 'playing' ? 'iconstop' : 'iconbofang2'}
               size={30}
               color="#fff"
             />
