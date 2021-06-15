@@ -152,6 +152,9 @@ class Detail extends React.Component<IProps, IState> {
     });
   };
 
+  /**
+   * 弹幕
+   */
   barragePress = () => {
     this.setState({
       barrage: !this.state.barrage,
@@ -161,6 +164,16 @@ class Detail extends React.Component<IProps, IState> {
       duration: 1000,
       useNativeDriver: true,
     }).start();
+  };
+
+  skipProgress = (progress: number) => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'player/skip',
+      payload: {
+        progress: progress,
+      },
+    });
   };
 
   render() {
@@ -196,7 +209,7 @@ class Detail extends React.Component<IProps, IState> {
           <Text style={styles.barrageText}>弹幕</Text>
         </Touchable>
 
-        <PlaySlider />
+        <PlaySlider skipProgress={this.skipProgress}  />
 
         <View style={styles.bottomContainer}>
           <Touchable disabled={!previousId} onPress={this.previousPress}>

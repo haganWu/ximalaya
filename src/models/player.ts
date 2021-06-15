@@ -8,6 +8,7 @@ import {
   init,
   pause,
   play,
+  skipProgress,
   stop,
 } from '@/config/sound';
 
@@ -43,6 +44,7 @@ interface PlayerModel extends Model {
     watcherCurrentTime: EffectWithType; //轮询保存播放时间
     previoud: Effect;
     next: Effect;
+    skip: Effect;
   };
 }
 
@@ -73,7 +75,6 @@ const delay = (timeout: number) =>
 function* currentTime({call, put}: EffectsCommandMap) {
   while (true) {
     yield call(delay, 1000);
-    // console.log('轮询保存播放时间 ----', getCurrenDate());
     const time: number = yield call(getCurrentTime);
     yield put({
       type: 'setState',
@@ -218,6 +219,14 @@ const playerModel: PlayerModel = {
           id: currentItem.id,
         },
       });
+    },
+
+    *skip({payload}, {call, put}) {
+      try {
+        yield call(skipProgress, payload.progress);
+      } catch (err) {
+        console.log('拖动进度错误:', err);
+      }
     },
   },
 };

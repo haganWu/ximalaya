@@ -97,11 +97,21 @@ const getCurrentTime = (): Promise<number> => {
  */
 const getDuration = (): number => {
   if (sound) {
-    console.log('getDuration-->成功返回:', sound.getDuration);
+    // console.log('getDuration-->成功返回:', sound.getDuration);
     return sound.getDuration();
   }
   console.log('getDuration-->异常返回:', 0);
   return 0;
 };
 
-export {init, play, pause, getCurrentTime, getDuration, stop};
+const skipProgress = (progress: number) => {
+  return new Promise<void>(resolve => {
+    if (sound) {
+      sound.setCurrentTime(progress);
+    } else {
+      resolve();
+    }
+  });
+};
+
+export {init, play, pause, getCurrentTime, getDuration, stop, skipProgress};

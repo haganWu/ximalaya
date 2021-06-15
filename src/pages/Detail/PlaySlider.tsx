@@ -15,7 +15,9 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-interface IProps extends ModelState {}
+interface IProps extends ModelState {
+  skipProgress: (progress: number) => void;
+}
 
 class PlaySlider extends React.Component<IProps> {
   renderThumb = () => {
@@ -28,9 +30,20 @@ class PlaySlider extends React.Component<IProps> {
       </View>
     );
   };
+
+  onSlidingComplete = (progress: number) => {
+    const {skipProgress, duration, currentTime} = this.props;
+    // console.log('onSlidingComplete 滑动值--progress:', progress);
+    // console.log('onSlidingComplete 总长度--duration:', duration);
+    // console.log('currentTime 总长度--currentTime:', currentTime);
+    // console.log('-------------------------')
+    if (typeof skipProgress === 'function') {
+      skipProgress(progress);
+    }
+  };
+
   render() {
     const {currentTime, duration} = this.props;
-    console.log('---duration:' + duration + ' ,currentTime:' + currentTime);
     return (
       <View style={styles.container}>
         <Slider
@@ -39,7 +52,8 @@ class PlaySlider extends React.Component<IProps> {
           maximumTrackTintColor="rgba(255,255,255,0.3)" //未播放颜色
           minimumTrackTintColor="white" //已播放颜色
           renderThumb={this.renderThumb} //自定义滑块
-          thumbStyle={styles.thumb} //设置划款样式
+          thumbStyle={styles.thumb} //设置滑块样式
+          onSlidingComplete={this.onSlidingComplete}
         />
       </View>
     );
