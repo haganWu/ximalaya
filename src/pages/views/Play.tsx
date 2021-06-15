@@ -10,6 +10,8 @@ const mapStateToProps = ({player}: RootState) => {
   return {
     thumbnailUrl: player.thumbnailUrl,
     playState: player.playState,
+    currentTime: player.currentTime,
+    duration: player.duration,
   };
 };
 
@@ -60,10 +62,10 @@ class Play extends React.Component<IProps> {
   }
 
   render() {
-    const {thumbnailUrl} = this.props;
+    const {thumbnailUrl, currentTime, duration} = this.props;
     return (
       <Touchable style={styles.container}>
-        <Progress>
+        <Progress currentTime={currentTime} duration={duration}>
           <Animated.View style={{transform: [{rotate: this.rotate}]}}>
             {thumbnailUrl ? (
               <Image source={{uri: thumbnailUrl}} style={styles.image} />

@@ -1,21 +1,12 @@
 import {RootState} from '@/models/index';
 import React from 'react';
-import {Children} from 'react';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {connect, ConnectedProps} from 'react-redux';
 
-const mapStateToProps = ({player}: RootState) => {
-  return {
-    currentTime: player.currentTime,
-    duration: player.duration,
-  };
-};
-
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
-interface IProps extends ModelState {}
+interface IProps {
+  currentTime: number;
+  duration: number;
+}
 
 class Progress extends React.Component<IProps> {
   render() {
@@ -33,4 +24,4 @@ class Progress extends React.Component<IProps> {
     );
   }
 }
-export default connector(Progress);
+export default Progress;
