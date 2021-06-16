@@ -1,6 +1,7 @@
 import IconFont from '@/assets/iconfont';
 import Barrage, {Message} from '@/components/Barrage';
 import Touchable from '@/components/Touchable';
+import storage from '@/config/storage';
 import {RootState} from '@/models/index';
 import {ModelStackNavigation, ModelStackParamList} from '@/navigator/index';
 import {randomIndex, viewportWidth} from '@/utils/index';
@@ -42,6 +43,8 @@ const mapStateToProps = ({player}: RootState) => {
     previousId: player.previousId,
     nextId: player.nextId,
     id: player.id,
+    currentTime: player.currentTime,
+    duration: player.duration,
   };
 };
 const connector = connect(mapStateToProps);
@@ -67,6 +70,7 @@ class Detail extends React.Component<IProps, IState> {
     barrageData: [],
   };
   anim = new Animated.Value(1);
+  
   componentDidMount() {
     const {dispatch, route, navigation, title, id} = this.props;
     if (route.params && id !== route.params.id) {
@@ -82,9 +86,6 @@ class Detail extends React.Component<IProps, IState> {
       });
     }
 
-    // dispatch({
-    //   type: 'player/watcherCurrentTime',
-    // });
     navigation.setOptions({
       headerTitle: title,
     });
@@ -101,12 +102,6 @@ class Detail extends React.Component<IProps, IState> {
       });
     }
   }
-  // componentWillUnmount() {
-  //   const {dispatch} = this.props;
-  //   dispatch({
-  //     type: 'player/pause',
-  //   });
-  // }
 
   /**
    * 添加弹幕

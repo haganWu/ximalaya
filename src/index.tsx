@@ -14,7 +14,11 @@ export default class extends React.Component {
       <Provider store={store}>
         <Navigator />
         {/* 设置状态栏 */}
-        <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent/>
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="dark-content"
+          translucent
+        />
       </Provider>
     );
   }

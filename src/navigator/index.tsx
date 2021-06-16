@@ -12,13 +12,23 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import BottomTabs from './BottomTabs';
-import {Animated, Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  AppState,
+  BackHandler,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  ToastAndroid,
+} from 'react-native';
 import Category from '@/pages/Category/index';
 import Album from '@/pages/Album/index';
 import Detail from '@/pages/Detail/index';
 import IconFont from '@/assets/iconfont';
 import PlayView from '@/pages/views/PlayView';
 import {getActiveRouteName, navigationRef} from '../utils';
+import {RootState} from '../models';
+import {connect, ConnectedProps} from 'react-redux';
 
 /**
  * 使用type约束泛型类型
@@ -186,6 +196,7 @@ function ModelStackScreen() {
   );
 }
 
+let lastBackPressed = Date.now();
 class Navigator extends React.Component {
   /**
    * 将routeName保存到state
@@ -194,12 +205,45 @@ class Navigator extends React.Component {
     routeName: 'Root',
   };
 
+  componentDidMount() {
+    if (Platform.OS === 'android')
+      BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
+    AppState.addEventListener('change', this._onAppStateChanged);
+  }
+  componentWillUnmount() {
+    if (Platform.OS === 'android')
+      BackHandler.removeEventListener('hardwareBackPress', this._onBackPressed);
+    AppState.removeEventListener('change', this._onAppStateChanged);
+  }
+
+  _onBackPressed() {
+    if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
+      BackHandler.exitApp();
+    }
+    lastBackPressed = Date.now();
+    ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+    return true;
+  }
+
+  _onAppStateChanged() {
+    switch (AppState.currentState) {
+      case 'active':
+        console.log('active');
+        break;
+      case 'background':
+        console.log('background');
+        break;
+      default:
+    }
+  }
+
   /**
    * 页面切换时回调
    */
   onStateChange = (state: NavigationState | undefined) => {
     if (typeof state !== 'undefined') {
       const routeName = getActiveRouteName(state);
+      console.log('routeName:', routeName);
       /**
        * 保存数据到state里面
        */
@@ -213,6 +257,7 @@ class Navigator extends React.Component {
     /**
      * 从state里获取routeName
      */
+
     const {routeName} = this.state;
     return (
       /**

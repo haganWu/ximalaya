@@ -3,10 +3,8 @@ import {
   FlatList,
   View,
   ListRenderItemInfo,
-  Alert,
   Text,
   StyleSheet,
-  Image,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
@@ -57,6 +55,7 @@ class Home extends React.Component<IProps, IState> {
   state = {
     refreshing: false,
   };
+
   componentDidMount() {
     const {dispatch, namespace} = this.props;
     dispatch({
