@@ -1,5 +1,9 @@
 import React from 'react';
-import {NavigationContainer, RouteProp} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigationState,
+  RouteProp,
+} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -13,6 +17,8 @@ import Category from '@/pages/Category/index';
 import Album from '@/pages/Album/index';
 import Detail from '@/pages/Detail/index';
 import IconFont from '@/assets/iconfont';
+import PlayView from '@/pages/views/PlayView';
+import {getActiveRouteName} from '../utils';
 
 /**
  * 使用type约束泛型类型
@@ -181,10 +187,37 @@ function ModelStackScreen() {
 }
 
 class Navigator extends React.Component {
+  /**
+   * 将routeName保存到state
+   */
+  state = {
+    routeName: 'Root',
+  };
+
+  /**
+   * 页面切换时回调
+   */
+  onStateChange = (state: NavigationState | undefined) => {
+    if (typeof state !== 'undefined') {
+      const routeName = getActiveRouteName(state);
+      /**
+       * 保存数据到state里面
+       */
+      this.setState({
+        routeName,
+      });
+    }
+  };
+
   render() {
+    /**
+     * 从state里获取routeName
+     */
+    const {routeName} = this.state;
     return (
-      <NavigationContainer>
+      <NavigationContainer onStateChange={this.onStateChange}>
         <ModelStackScreen />
+        <PlayView routeName={routeName} />
       </NavigationContainer>
     );
   }

@@ -1,7 +1,7 @@
 import {IProgram} from '@/models/album';
 import {RootState} from '@/models/index';
 import React from 'react';
-import {Alert, Animated, ListRenderItemInfo, StyleSheet} from 'react-native';
+import {Animated, ListRenderItemInfo, StyleSheet} from 'react-native';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {ITabProps} from '../Tab';

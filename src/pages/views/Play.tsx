@@ -2,7 +2,12 @@ import IconFont from '@/assets/iconfont';
 import Touchable from '@/components/Touchable';
 import {RootState} from '@/models/index';
 import React from 'react';
-import {Easing, Image, StyleSheet, Animated} from 'react-native';
+import {
+  Easing,
+  Image,
+  StyleSheet,
+  Animated,
+} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import Progress from './Progress';
 
@@ -19,7 +24,9 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-interface IProps extends ModelState {}
+interface IProps extends ModelState {
+  maringTop: number;
+}
 
 class Play extends React.Component<IProps> {
   anmi = new Animated.Value(0);
@@ -45,7 +52,7 @@ class Play extends React.Component<IProps> {
 
   componentDidMount() {
     const {playState} = this.props;
-    console.log('playState:', playState);
+    // console.log('playState:', playState);
     if (playState === 'playing') {
       this.timing.start();
     }
@@ -53,7 +60,7 @@ class Play extends React.Component<IProps> {
 
   componentDidUpdate() {
     const {playState} = this.props;
-    console.log('playState:', playState);
+    // console.log('playState:', playState);
     if (playState === 'playing') {
       this.timing.start();
     } else if (playState === 'paused') {
@@ -62,9 +69,10 @@ class Play extends React.Component<IProps> {
   }
 
   render() {
-    const {thumbnailUrl, currentTime, duration} = this.props;
+    const {thumbnailUrl, currentTime, duration, maringTop} = this.props;
     return (
-      <Touchable style={styles.container}>
+      <Touchable
+        style={[styles.container, {marginTop: maringTop ? maringTop : 0}]}>
         <Progress currentTime={currentTime} duration={duration}>
           <Animated.View style={{transform: [{rotate: this.rotate}]}}>
             {thumbnailUrl ? (
@@ -82,9 +90,7 @@ class Play extends React.Component<IProps> {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 22,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 14,
   },
   image: {
     width: 42,

@@ -96,6 +96,7 @@ class BottomTabs extends React.Component<IProps> {
       <Tab.Navigator
         tabBarOptions={{
           activeTintColor: '#f86442',
+          
         }}>
         <Tab.Screen
           name="HomeTabs"
@@ -123,7 +124,7 @@ class BottomTabs extends React.Component<IProps> {
           options={{
             title: '',
             tabBarIcon: () => {
-              return <Play />;
+              return <Play maringTop={14} />;
             },
           }}
         />
