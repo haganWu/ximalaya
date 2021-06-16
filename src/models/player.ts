@@ -98,6 +98,7 @@ const playerModel: PlayerModel = {
   },
   effects: {
     *fetchPlayer({payload}, {call, put}) {
+      yield call(stop);
       const {data} = yield call(axios.get, CATEGORY_URL, {
         params: {
           id: payload.id,
@@ -168,7 +169,6 @@ const playerModel: PlayerModel = {
     ],
 
     *previoud({payload}, {call, put, select}) {
-      yield call(stop);
       const {id, sounds}: PlayerModelState = yield select(
         ({player}: RootState) => player,
       );
@@ -195,7 +195,6 @@ const playerModel: PlayerModel = {
     },
 
     *next({payload}, {call, put, select}) {
-      yield call(stop);
       const {id, sounds}: PlayerModelState = yield select(
         ({player}: RootState) => player,
       );

@@ -2,12 +2,7 @@ import IconFont from '@/assets/iconfont';
 import Touchable from '@/components/Touchable';
 import {RootState} from '@/models/index';
 import React from 'react';
-import {
-  Easing,
-  Image,
-  StyleSheet,
-  Animated,
-} from 'react-native';
+import {Easing, Image, StyleSheet, Animated} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import Progress from './Progress';
 
@@ -26,6 +21,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
   maringTop: number;
+  onPress: () => void;
 }
 
 class Play extends React.Component<IProps> {
@@ -67,11 +63,18 @@ class Play extends React.Component<IProps> {
       this.timing.stop();
     }
   }
+  onClick = () => {
+    const {onPress, thumbnailUrl} = this.props;
+    if (thumbnailUrl && onPress && typeof onPress === 'function') {
+      onPress();
+    }
+  };
 
   render() {
     const {thumbnailUrl, currentTime, duration, maringTop} = this.props;
     return (
       <Touchable
+        onPress={this.onClick}
         style={[styles.container, {marginTop: maringTop ? maringTop : 0}]}>
         <Progress currentTime={currentTime} duration={duration}>
           <Animated.View style={{transform: [{rotate: this.rotate}]}}>

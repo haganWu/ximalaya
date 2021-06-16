@@ -18,7 +18,7 @@ import Album from '@/pages/Album/index';
 import Detail from '@/pages/Detail/index';
 import IconFont from '@/assets/iconfont';
 import PlayView from '@/pages/views/PlayView';
-import {getActiveRouteName} from '../utils';
+import {getActiveRouteName, navigationRef} from '../utils';
 
 /**
  * 使用type约束泛型类型
@@ -215,7 +215,12 @@ class Navigator extends React.Component {
      */
     const {routeName} = this.state;
     return (
-      <NavigationContainer onStateChange={this.onStateChange}>
+      /**
+       * 可通过ref属性得到NavigationContainer实例
+       */
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={this.onStateChange}>
         <ModelStackScreen />
         <PlayView routeName={routeName} />
       </NavigationContainer>

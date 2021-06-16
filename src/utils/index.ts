@@ -1,4 +1,8 @@
-import {NavigationState} from '@react-navigation/native';
+import {
+  NavigationContainerRef,
+  NavigationState,
+} from '@react-navigation/native';
+import React from 'react';
 import {Dimensions} from 'react-native';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
@@ -54,6 +58,16 @@ function randomIndex(length: number) {
   return Math.floor(Math.random() * length);
 }
 
+/**
+ * navigation/index  NavigationContainer Ref属性
+ */
+const navigationRef = React.createRef<NavigationContainerRef>();
+
+function navigate(name: string, params?: any) {
+  //navigationRef.current -> NavigationContainer实例
+  navigationRef.current?.navigate(name, params);
+}
+
 export {
   viewportWidth,
   viewportHeight,
@@ -63,4 +77,6 @@ export {
   getCurrenDate,
   formatTime,
   randomIndex,
+  navigationRef,
+  navigate,
 };

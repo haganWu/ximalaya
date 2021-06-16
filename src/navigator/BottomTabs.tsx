@@ -96,7 +96,6 @@ class BottomTabs extends React.Component<IProps> {
       <Tab.Navigator
         tabBarOptions={{
           activeTintColor: '#f86442',
-          
         }}>
         <Tab.Screen
           name="HomeTabs"
@@ -121,12 +120,17 @@ class BottomTabs extends React.Component<IProps> {
         <Tab.Screen
           name="Play"
           component={Play}
-          options={{
+          options={({navigation}) => ({
             title: '',
-            tabBarIcon: () => {
-              return <Play maringTop={14} />;
+            tabBarButton: () => {
+              return (
+                <Play
+                  maringTop={4}
+                  onPress={() => navigation.navigate('Detail')}
+                />
+              );
             },
-          }}
+          })}
         />
         <Tab.Screen
           name="Found"

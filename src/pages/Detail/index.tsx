@@ -41,6 +41,7 @@ const mapStateToProps = ({player}: RootState) => {
     title: player.title,
     previousId: player.previousId,
     nextId: player.nextId,
+    id: player.id,
   };
 };
 const connector = connect(mapStateToProps);
@@ -67,13 +68,20 @@ class Detail extends React.Component<IProps, IState> {
   };
   anim = new Animated.Value(1);
   componentDidMount() {
-    const {dispatch, route, navigation, title} = this.props;
-    dispatch({
-      type: 'player/fetchPlayer',
-      payload: {
-        id: route.params.id,
-      },
-    });
+    const {dispatch, route, navigation, title, id} = this.props;
+    if (route.params && id !== route.params.id) {
+      dispatch({
+        type: 'player/fetchPlayer',
+        payload: {
+          id: route.params.id,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'player/play',
+      });
+    }
+
     // dispatch({
     //   type: 'player/watcherCurrentTime',
     // });

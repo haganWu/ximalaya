@@ -1,5 +1,5 @@
 import {RootState} from '@/models/index';
-import {viewportWidth} from '@/utils/index';
+import {navigate, viewportWidth} from '@/utils/index';
 import React from 'react';
 import {Platform, StyleSheet} from 'react-native';
 import {View} from 'react-native';
@@ -22,9 +22,12 @@ interface IProps extends ModelStack {
 }
 
 class PlayView extends React.Component<IProps> {
+  onPress = () => {
+    navigate('Detail');
+  };
+
   render() {
     const {routeName, playState} = this.props;
-    console.log('routeName:', routeName);
     if (
       playState !== 'playing' ||
       routeName === 'Root' ||
@@ -34,7 +37,7 @@ class PlayView extends React.Component<IProps> {
     }
     return (
       <View style={styles.container}>
-        <Play maringTop={0} />
+        <Play maringTop={0} onPress={this.onPress} />
       </View>
     );
   }
@@ -49,7 +52,7 @@ const styles = StyleSheet.create({
     height: width + 20,
     bottom: 0,
     left: (viewportWidth - width) / 2,
-    backgroundColor: 'blue', //rgba(255,255,255,0.8)
+    backgroundColor: 'rgba(0,0,0,0.1)',
     padding: 4,
     borderTopLeftRadius: width / 2,
     borderTopRightRadius: width / 2,
