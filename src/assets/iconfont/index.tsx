@@ -4,6 +4,7 @@
 import React, { FunctionComponent } from 'react';
 import { ViewProps } from 'react-native';
 import { GProps } from 'react-native-svg';
+import IcontrashGray from './IcontrashGray';
 import Iconbofang2 from './Iconbofang2';
 import Iconxuxian from './Iconxuxian';
 import Iconerji from './Iconerji';
@@ -35,7 +36,7 @@ import Iconshouye from './Iconshouye';
 import Iconzhanghu from './Iconzhanghu';
 import Iconfaxian from './Iconfaxian';
 
-export type IconNames = 'iconbofang2' | 'iconxuxian' | 'iconerji' | 'iconcainixihuan' | 'iconFullscreen' | 'iconvolume_off' | 'iconmusic-icon_pause' | 'iconxia' | 'iconbofang' | 'iconbofangsanjiaoxing' | 'iconbofang1' | 'iconnext' | 'iconxiayishou' | 'iconround-play_arrow-p' | 'icongerenzhanghaoguanli' | 'iconVolumeUp' | 'iconshengyin' | 'iconlijitingke' | 'iconhuanyipi' | 'iconback' | 'iconfavorites-fill' | 'iconstop' | 'iconshijian' | 'iconmore' | 'iconmessage2' | 'iconxihuan' | 'iconwoting' | 'iconshouye' | 'iconzhanghu' | 'iconfaxian';
+export type IconNames = 'icontrash-gray' | 'iconbofang2' | 'iconxuxian' | 'iconerji' | 'iconcainixihuan' | 'iconFullscreen' | 'iconvolume_off' | 'iconmusic-icon_pause' | 'iconxia' | 'iconbofang' | 'iconbofangsanjiaoxing' | 'iconbofang1' | 'iconnext' | 'iconxiayishou' | 'iconround-play_arrow-p' | 'icongerenzhanghaoguanli' | 'iconVolumeUp' | 'iconshengyin' | 'iconlijitingke' | 'iconhuanyipi' | 'iconback' | 'iconfavorites-fill' | 'iconstop' | 'iconshijian' | 'iconmore' | 'iconmessage2' | 'iconxihuan' | 'iconwoting' | 'iconshouye' | 'iconzhanghu' | 'iconfaxian';
 
 interface Props extends GProps, ViewProps {
   name: IconNames;
@@ -45,66 +46,68 @@ interface Props extends GProps, ViewProps {
 
 let IconFont: FunctionComponent<Props> = ({ name, ...rest }) => {
   switch (name) {
+    case 'icontrash-gray':
+      return <IcontrashGray key="1" {...rest} />;
     case 'iconbofang2':
-      return <Iconbofang2 key="1" {...rest} />;
+      return <Iconbofang2 key="2" {...rest} />;
     case 'iconxuxian':
-      return <Iconxuxian key="2" {...rest} />;
+      return <Iconxuxian key="3" {...rest} />;
     case 'iconerji':
-      return <Iconerji key="3" {...rest} />;
+      return <Iconerji key="4" {...rest} />;
     case 'iconcainixihuan':
-      return <Iconcainixihuan key="4" {...rest} />;
+      return <Iconcainixihuan key="5" {...rest} />;
     case 'iconFullscreen':
-      return <IconFullscreen key="5" {...rest} />;
+      return <IconFullscreen key="6" {...rest} />;
     case 'iconvolume_off':
-      return <IconvolumeOff key="6" {...rest} />;
+      return <IconvolumeOff key="7" {...rest} />;
     case 'iconmusic-icon_pause':
-      return <IconmusicIconPause key="7" {...rest} />;
+      return <IconmusicIconPause key="8" {...rest} />;
     case 'iconxia':
-      return <Iconxia key="8" {...rest} />;
+      return <Iconxia key="9" {...rest} />;
     case 'iconbofang':
-      return <Iconbofang key="9" {...rest} />;
+      return <Iconbofang key="10" {...rest} />;
     case 'iconbofangsanjiaoxing':
-      return <Iconbofangsanjiaoxing key="10" {...rest} />;
+      return <Iconbofangsanjiaoxing key="11" {...rest} />;
     case 'iconbofang1':
-      return <Iconbofang1 key="11" {...rest} />;
+      return <Iconbofang1 key="12" {...rest} />;
     case 'iconnext':
-      return <Iconnext key="12" {...rest} />;
+      return <Iconnext key="13" {...rest} />;
     case 'iconxiayishou':
-      return <Iconxiayishou key="13" {...rest} />;
+      return <Iconxiayishou key="14" {...rest} />;
     case 'iconround-play_arrow-p':
-      return <IconroundPlayArrowP key="14" {...rest} />;
+      return <IconroundPlayArrowP key="15" {...rest} />;
     case 'icongerenzhanghaoguanli':
-      return <Icongerenzhanghaoguanli key="15" {...rest} />;
+      return <Icongerenzhanghaoguanli key="16" {...rest} />;
     case 'iconVolumeUp':
-      return <IconVolumeUp key="16" {...rest} />;
+      return <IconVolumeUp key="17" {...rest} />;
     case 'iconshengyin':
-      return <Iconshengyin key="17" {...rest} />;
+      return <Iconshengyin key="18" {...rest} />;
     case 'iconlijitingke':
-      return <Iconlijitingke key="18" {...rest} />;
+      return <Iconlijitingke key="19" {...rest} />;
     case 'iconhuanyipi':
-      return <Iconhuanyipi key="19" {...rest} />;
+      return <Iconhuanyipi key="20" {...rest} />;
     case 'iconback':
-      return <Iconback key="20" {...rest} />;
+      return <Iconback key="21" {...rest} />;
     case 'iconfavorites-fill':
-      return <IconfavoritesFill key="21" {...rest} />;
+      return <IconfavoritesFill key="22" {...rest} />;
     case 'iconstop':
-      return <Iconstop key="22" {...rest} />;
+      return <Iconstop key="23" {...rest} />;
     case 'iconshijian':
-      return <Iconshijian key="23" {...rest} />;
+      return <Iconshijian key="24" {...rest} />;
     case 'iconmore':
-      return <Iconmore key="24" {...rest} />;
+      return <Iconmore key="25" {...rest} />;
     case 'iconmessage2':
-      return <Iconmessage2 key="25" {...rest} />;
+      return <Iconmessage2 key="26" {...rest} />;
     case 'iconxihuan':
-      return <Iconxihuan key="26" {...rest} />;
+      return <Iconxihuan key="27" {...rest} />;
     case 'iconwoting':
-      return <Iconwoting key="27" {...rest} />;
+      return <Iconwoting key="28" {...rest} />;
     case 'iconshouye':
-      return <Iconshouye key="28" {...rest} />;
+      return <Iconshouye key="29" {...rest} />;
     case 'iconzhanghu':
-      return <Iconzhanghu key="29" {...rest} />;
+      return <Iconzhanghu key="30" {...rest} />;
     case 'iconfaxian':
-      return <Iconfaxian key="30" {...rest} />;
+      return <Iconfaxian key="31" {...rest} />;
   }
 
   return null;

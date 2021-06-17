@@ -11,6 +11,7 @@ import {
   skipProgress,
   stop,
 } from '@/config/sound';
+import {saveProgram} from '@/config/realm';
 
 /**
  * 节目(播放页面数据)接口
@@ -97,7 +98,10 @@ const playerModel: PlayerModel = {
     },
   },
   effects: {
-    *fetchPlayer({payload}, {call, put}) {
+    /**
+     * select : 可以获取dva仓库整个state(不仅仅是当前model的state),与mapStateToProps函数相同
+     */
+    *fetchPlayer({payload}, {call, put, select}) {
       yield call(stop);
       const {data} = yield call(axios.get, CATEGORY_URL, {
         params: {
@@ -119,6 +123,21 @@ const playerModel: PlayerModel = {
       yield put({
         type: 'play',
       });
+
+      //这里只需要获取当前model的state
+      const {id, title, thumbnailUrl, currentTime}: PlayerModelState =
+        yield select(({player}: RootState) => player);
+      //保存正在播放的音频
+      if (currentTime > 0) {
+        console.log('保存 查看title:', title);
+        saveProgram({
+          id,
+          title,
+          thumbnailUrl,
+          currentTime,
+          duration: getDuration(),
+        });
+      }
     },
 
     *play({payload}, {call, put}) {
@@ -143,7 +162,7 @@ const playerModel: PlayerModel = {
       });
     },
 
-    *pause({payload}, {call, put}) {
+    *pause({payload}, {call, put, select}) {
       //存储播放/暂停状态
       yield call(pause);
       yield put({
@@ -152,6 +171,18 @@ const playerModel: PlayerModel = {
           playState: 'paused',
         },
       });
+
+      //这里只需要获取当前model的state
+      const {id, currentTime}: PlayerModelState = yield select(
+        ({player}: RootState) => player,
+      );
+      //保存正在播放的音频
+      if (currentTime > 0) {
+        saveProgram({
+          id,
+          currentTime,
+        });
+      }
     },
 
     /**
