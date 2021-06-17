@@ -1,4 +1,4 @@
-import Realm from 'realm';
+import Realm, {schemaVersion} from 'realm';
 
 export interface ISaveProgram {
   id: string;
@@ -13,8 +13,8 @@ export interface ISaveProgram {
  * 声明表
  */
 class Program {
-  currentTime = 0;
-  duration = 0;
+  //   currentTime = 0;
+  //   duration = 0;
   static schema = {
     name: 'Program',
     primaryKey: 'id',
@@ -24,17 +24,33 @@ class Program {
       thumbnailUrl: 'string',
       currentTime: {type: 'double', default: 0},
       duration: {type: 'double', default: 0},
+      rate: {type: 'double', default: 0},
     },
   };
 
-  get rate() {
-    return this.duration > 0
-      ? Math.floor(((this.currentTime * 100) / this.duration) * 100) / 100
-      : 0;
-  }
+  //   get rate() {
+  //     return this.duration > 0
+  //       ? Math.floor(((this.currentTime * 100) / this.duration) * 100) / 100
+  //       : 0;
+  //   }
 }
 
-const realm = new Realm({schema: [Program]});
+const realm = new Realm({
+  schema: [Program],
+  schemaVersion: 1,
+  migration: (oldRealm, newRealm) => {
+    if (oldRealm.schemaVersion < 1) {
+      const oldObjects = oldRealm.objects<ISaveProgram>('Program');
+      const newObjects = newRealm.objects<ISaveProgram>('Program');
+      for (let i = 0; i < oldObjects.length; i++) {
+        newObjects[i].rate =
+          Math.floor(
+            ((oldObjects[i].currentTime * 100) / oldObjects[i].duration) * 100,
+          ) / 100;
+      }
+    }
+  },
+});
 
 /**
  * Partial:把一个属性的类型全部设置成可选的
