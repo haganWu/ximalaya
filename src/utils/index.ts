@@ -37,11 +37,37 @@ function getCurrenDate() {
   var year = date.getFullYear().toString();
   var month = (date.getMonth() + 1).toString();
   var day = date.getDate().toString();
-  var hour = date.getHours().toString();
-  var minute = date.getMinutes().toString();
-  var second = date.getSeconds().toString();
+  var hour = date.getHours();
+  var minute = date.getMinutes();
+  var second = date.getSeconds();
 
-  const result = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
+  const result = `${year}年${month}月${day}日 ${
+    hour < 10 ? '0' + hour : hour
+  }:${minute < 10 ? '0' + minute : minute}:${
+    second < 10 ? '0' + second : second
+  }`;
+  return result;
+}
+
+/**
+ * 格式化时间戳
+ * @param date
+ * @returns
+ */
+function formateDate(timestamp: number) {
+  var date = new Date(timestamp);
+  var year = date.getFullYear().toString();
+  var month = (date.getMonth() + 1).toString();
+  var day = date.getDate().toString();
+  var hour = date.getHours();
+  var minute = date.getMinutes();
+  var second = date.getSeconds();
+  
+  const result = `${year}年${month}月${day}日 ${
+    hour < 10 ? '0' + hour : hour
+  }:${minute < 10 ? '0' + minute : minute}:${
+    second < 10 ? '0' + second : second
+  }`;
   return result;
 }
 
@@ -79,4 +105,5 @@ export {
   randomIndex,
   navigationRef,
   navigate,
+  formateDate,
 };

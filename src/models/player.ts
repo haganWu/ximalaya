@@ -136,6 +136,7 @@ const playerModel: PlayerModel = {
           thumbnailUrl,
           currentTime,
           duration: getDuration(),
+          listenTime: Date.now(),
         });
       }
     },
@@ -181,6 +182,7 @@ const playerModel: PlayerModel = {
         saveProgram({
           id,
           currentTime,
+          listenTime: Date.now(),
         });
       }
     },

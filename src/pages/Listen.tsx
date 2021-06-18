@@ -10,19 +10,15 @@ import {
 import {RootStackNavigation} from '@/navigator/index';
 import realm, {ISaveProgram} from '@/config/realm';
 import IconFont from '@/assets/iconfont';
-import {formatTime} from '../utils';
+import {formateDate, formatTime} from '../utils';
 import Touchable from '@/components/Touchable';
-import {Alert} from 'react-native';
+import { Collection } from 'realm';
 
 interface IProps {
   navigation: RootStackNavigation;
 }
 
 class Listen extends React.Component<IProps> {
-  componentDidMount() {
-    const programs = realm.objects<ISaveProgram>('Program');
-    console.log('componentDidMount programs:', programs);
-  }
 
   onItemDelete = (item: ISaveProgram) => {
     realm.write(() => {
@@ -48,6 +44,9 @@ class Listen extends React.Component<IProps> {
             <Text style={styles.percentage}>已播:{item.rate}%</Text>
             {/* <Text style={styles.percentage}>已播:{percentage.toFixed(2)}%</Text> */}
           </View>
+          <Text style={styles.lastPlay}>
+            上次播放:{formateDate(item.listenTime)}
+          </Text>
         </View>
         {/* 参数传递  this.onItemDelete  ->  () => {this.onItemDelete(item);
           }*/}
@@ -121,12 +120,16 @@ const styles = StyleSheet.create({
   middelBottomContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginVertical: 8,
   },
   currentTime: {
     fontSize: 14,
     color: '#999',
     marginLeft: 4,
+  },
+  lastPlay: {
+    fontSize: 12,
+    color: '#999',
   },
   percentage: {
     fontSize: 14,
