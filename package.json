@@ -46,6 +46,8 @@
     "react-native-svg": "^12.1.1",
     "react-native-tab-view": "^3.0.1",
     "react-native-tab-view-viewpager-adapter": "^1.1.0",
+    "react-native-video": "^5.1.1",
+    "react-native-video-custom-controls": "^0.1.0",
     "react-navigation-header-buttons": "^7.0.1",
     "react-redux": "^7.2.4",
     "realm": "^10.4.2"
@@ -57,6 +59,7 @@
     "@types/jest": "^26.0.20",
     "@types/react-native": "^0.64.0",
     "@types/react-native-snap-carousel": "^3.8.3",
+    "@types/react-native-video": "^5.0.6",
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^26.6.3",
     "eslint": "^7.14.0",

@@ -3,8 +3,9 @@ import album from './album';
 import category from './category';
 import home from './home';
 import player from './player';
+import found from './found';
 
-const models = [home, category, album, player];
+const models = [home, category, album, player, found];
 
 /**
  * 保存每个model中state的类型

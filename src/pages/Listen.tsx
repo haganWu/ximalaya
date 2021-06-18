@@ -7,19 +7,12 @@ import {
   ListRenderItemInfo,
   Image,
 } from 'react-native';
-import {RootStackNavigation} from '@/navigator/index';
 import realm, {ISaveProgram} from '@/config/realm';
 import IconFont from '@/assets/iconfont';
 import {formateDate, formatTime} from '../utils';
 import Touchable from '@/components/Touchable';
-import { Collection } from 'realm';
 
-interface IProps {
-  navigation: RootStackNavigation;
-}
-
-class Listen extends React.Component<IProps> {
-
+class Listen extends React.Component {
   onItemDelete = (item: ISaveProgram) => {
     realm.write(() => {
       realm.delete(realm.objects('Program').filtered(`id='${item.id}'`));
