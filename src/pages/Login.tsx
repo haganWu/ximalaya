@@ -73,7 +73,7 @@ class Login extends React.Component<Iprops> {
                   name="password"
                   placeholder="请输入密码"
                   component={Input}
-                  secureTextEntry={true}
+                  secureTextEntry
                 />
                 <Touchable style={styles.loginTextBtn} onPress={handleSubmit}>
                   <Text style={styles.loginText}>登录</Text>

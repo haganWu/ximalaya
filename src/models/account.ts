@@ -1,7 +1,9 @@
 import axios from 'axios';
-import {Effect, Model} from 'dva-core-ts';
+import {Effect, Model, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import {goBack} from '@/utils/index';
+import storage, {load} from '@/config/storage';
+import {call} from 'react-native-reanimated';
 
 const ACCOUNT_URL = '/mock/11/hagan/login';
 
@@ -23,7 +25,10 @@ export interface AccountModel extends Model {
   effects: {
     login: Effect;
     logout: Effect;
+    loadStroage: Effect;
   };
+
+  subscriptions: SubscriptionsMapObject;
 }
 const initialState: AccountModelState = {
   account: undefined,
@@ -50,6 +55,10 @@ const accountModel: AccountModel = {
             account: data,
           },
         });
+        storage.save({
+          key: 'account',
+          data,
+        });
         goBack();
       } else {
         console.log(msg);
@@ -61,6 +70,32 @@ const accountModel: AccountModel = {
         payload: {
           account: undefined,
         },
+      });
+      storage.save({
+        key: 'account',
+        data: null,
+      });
+    },
+
+    *loadStroage(_, {put, call}) {
+      try {
+        const account = yield call(load, {key: 'account'});
+        yield put({
+          type: 'setState',
+          payload: {
+            account: account,
+          },
+        });
+      } catch (error) {
+        console.log('保存用户信息错误', error);
+      }
+    },
+  },
+
+  subscriptions: {
+    setup({dispatch}) {
+      dispatch({
+        type: 'loadStroage',
       });
     },
   },
