@@ -34,7 +34,6 @@ const foundModel: FoundModel = {
   effects: {
     *fetchList({callback}, {call}) {
       const {data} = yield call(axios.get, ALBUM_URL);
-      console.log('found data:', data);
       if (typeof callback === 'function') {
         callback(data);
       }

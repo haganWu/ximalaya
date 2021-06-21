@@ -27,8 +27,7 @@ import Detail from '@/pages/Detail/index';
 import IconFont from '@/assets/iconfont';
 import PlayView from '@/pages/views/PlayView';
 import {getActiveRouteName, navigationRef} from '../utils';
-import {RootState} from '../models';
-import {connect, ConnectedProps} from 'react-redux';
+import Login from '@/pages/Login';
 
 /**
  * 使用type约束泛型类型
@@ -138,6 +137,7 @@ export type ModelStackParamList = {
   Detail: {
     id: string;
   };
+  Login: undefined;
 };
 
 const ModelStack = createStackNavigator<ModelStackParamList>();
@@ -158,7 +158,7 @@ function ModelStackScreen() {
      *   headerTitle: '' 设置标题
      *   headerTransparent: true 设置标题透明
      *   cardStyle:{backgroundColor:'#807c66'} 设置页面容器样式
-     *    headerBackImage: ({tintColor}) => (<IconFont name="iconxia" size={22} color={tintColor}/> 设置返回键图标
+     *   headerBackImage: ({tintColor}) => (<IconFont name="iconxia" size={22} color={tintColor}/> 设置返回键图标
      * */
     <ModelStack.Navigator
       mode="modal"
@@ -168,6 +168,7 @@ function ModelStackScreen() {
         gestureEnabled: true,
         ...TransitionPresets.ModalSlideFromBottomIOS,
         headerBackTitleVisible: false,
+        headerTintColor: '#333',
       }}>
       <ModelStack.Screen
         name="Root"
@@ -190,6 +191,13 @@ function ModelStackScreen() {
               style={styles.headerBackImage}
             />
           ),
+        }}
+      />
+      <ModelStack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerTitle: '登陆',
         }}
       />
     </ModelStack.Navigator>
