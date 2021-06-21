@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Effect, Model} from 'dva-core-ts';
-import {Alert} from 'react-native';
 import {Reducer} from 'redux';
+import {goBack} from '@/utils/index';
 
 const ACCOUNT_URL = '/mock/11/hagan/login';
 
@@ -50,10 +50,9 @@ const accountModel: AccountModel = {
             account: data,
           },
         });
-        Alert.alert('登陆成功');
+        goBack();
       } else {
         console.log(msg);
-        Alert.alert('登陆失败');
       }
     },
     *logout(_, {put}) {

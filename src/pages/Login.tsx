@@ -1,10 +1,11 @@
 import Touchable from '@/components/Touchable';
-import {Formik} from 'formik';
+import {Field, Formik} from 'formik';
 import React from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {ScrollView, Text} from 'react-native';
+import {StyleSheet, TextInput, View, ScrollView, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '../models';
+import * as Yup from 'yup';
+import Input from '@/components/Input';
 
 interface Values {
   account: string;
@@ -25,6 +26,11 @@ const mapStateToProps = ({loading}: RootState) => {
 const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
+
+const validationSchema = Yup.object().shape({
+  account: Yup.string().trim().required('请输入您的账号'),
+  password: Yup.string().trim().required('请输入密码'),
+});
 
 interface Iprops extends ModelState {}
 
@@ -47,24 +53,26 @@ class Login extends React.Component<Iprops> {
        * handleChange:表单发生变化之后执行的函数
        * handleBlur:表单输入项失去焦点之后之执行这个方法触发表单
        * handleSubmit:触发<Formik>组件中的onSubmit()函数
+       * validationSchema:自定义校验规则
        */
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={styles.logo}>听书</Text>
-        <Formik initialValues={initialValues} onSubmit={this.onSubmit}>
-          {({values, handleChange, handleBlur, handleSubmit}) => {
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          onSubmit={this.onSubmit}>
+          {({handleSubmit}) => {
             return (
-              <View style={styles.bottomContainer}>
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={handleChange('account')}
-                  onBlur={handleBlur('account')}
-                  value={values.account}
+              <View>
+                <Field
+                  name="account"
+                  placeholder="请输入账号"
+                  component={Input}
                 />
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
+                <Field
+                  name="password"
+                  placeholder="请输入密码"
+                  component={Input}
                   secureTextEntry={true}
                 />
                 <Touchable style={styles.loginTextBtn} onPress={handleSubmit}>
@@ -85,31 +93,18 @@ const styles = StyleSheet.create({
     color: '#f04112',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 40,
-  },
-  bottomContainer: {
-    alignItems: 'center',
-    padding: 16,
-  },
-  textInput: {
-    width: '100%',
-    height: 44,
-    backgroundColor: 'white',
-    borderColor: '#ccc',
-    marginBottom: 16,
-    marginHorizontal: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 4,
-    borderWidth: 1,
+    marginTop: 40,
   },
 
   loginTextBtn: {
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 40,
-    width: 88,
-    height: 44,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    marginHorizontal: 30,
+    borderColor: '#fea79d',
   },
   loginText: {
     fontSize: 32,

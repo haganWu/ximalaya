@@ -62,7 +62,7 @@ function formateDate(timestamp: number) {
   var hour = date.getHours();
   var minute = date.getMinutes();
   var second = date.getSeconds();
-  
+
   const result = `${year}年${month}月${day}日 ${
     hour < 10 ? '0' + hour : hour
   }:${minute < 10 ? '0' + minute : minute}:${
@@ -94,6 +94,10 @@ function navigate(name: string, params?: any) {
   navigationRef.current?.navigate(name, params);
 }
 
+function goBack() {
+  navigationRef.current?.goBack();
+}
+
 export {
   viewportWidth,
   viewportHeight,
@@ -106,4 +110,5 @@ export {
   navigationRef,
   navigate,
   formateDate,
+  goBack,
 };

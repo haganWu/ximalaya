@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Text, View} from 'react-native';
-import {ModelStackNavigation, RootStackNavigation} from '@/navigator/index';
+import {Text, View} from 'react-native';
+import {ModelStackNavigation} from '@/navigator/index';
 import {StyleSheet} from 'react-native';
 import {Image} from 'react-native';
 import defaultAvatarImg from '@/assets/default_avatar.png';
