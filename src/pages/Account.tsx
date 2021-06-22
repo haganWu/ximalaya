@@ -3,10 +3,10 @@ import {Text, View} from 'react-native';
 import {ModelStackNavigation} from '@/navigator/index';
 import {StyleSheet} from 'react-native';
 import {Image} from 'react-native';
-import defaultAvatarImg from '@/assets/default_avatar.png';
 import Touchable from '@/components/Touchable';
 import {RootState} from '../models';
 import {connect, ConnectedProps} from 'react-redux';
+import Authorized from './Authorized';
 
 const mapStateToProps = ({account}: RootState) => {
   return {
@@ -36,32 +36,19 @@ class Account extends React.Component<IProps> {
 
   render() {
     const {account} = this.props;
-
-    if (account) {
-      return (
+    return (
+      <Authorized authority={!!account}>
         <View style={styles.container}>
-          <Image style={styles.image} source={{uri: account.avatar}} />
+          <Image style={styles.image} source={{uri: account?.avatar}} />
           <View style={styles.rightContainer}>
             <Touchable onPress={this.onLogoutClick}>
-              <Text style={styles.name}>{account.name}</Text>
+              <Text style={styles.name}>{account?.name}</Text>
               <Text style={styles.logoutText}>退出登录</Text>
             </Touchable>
           </View>
         </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <Image style={styles.image} source={defaultAvatarImg} />
-          <View style={styles.rightContainer}>
-            <Touchable onPress={this.onLoginClick}>
-              <Text style={styles.loginText}>立即登录</Text>
-              <Text style={styles.loginTip}>登录后自动同步所有记录噢~</Text>
-            </Touchable>
-          </View>
-        </View>
-      );
-    }
+      </Authorized>
+    );
   }
 }
 
