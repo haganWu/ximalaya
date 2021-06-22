@@ -28,6 +28,7 @@ import IconFont from '@/assets/iconfont';
 import PlayView from '@/pages/views/PlayView';
 import {getActiveRouteName, navigationRef} from '../utils';
 import Login from '@/pages/Login';
+import SplashScreen from 'react-native-splash-screen';
 
 /**
  * 使用type约束泛型类型
@@ -214,6 +215,7 @@ class Navigator extends React.Component {
   };
 
   componentDidMount() {
+    SplashScreen.hide();
     if (Platform.OS === 'android')
       BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
     AppState.addEventListener('change', this._onAppStateChanged);
