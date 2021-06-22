@@ -5,15 +5,33 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native';
-
+import _ from 'lodash';
+import {useCallback} from 'react';
 // const Touchable: React.FC<TouchableOpacityProps> = props => (
 //   <TouchableOpacity activeOpacity={0.8} {...props} />
 // );
 
 const Touchable: React.FC<TouchableOpacityProps> = React.memo(
-  ({style, ...rest}) => {
+  ({style, onPress, ...rest}) => {
     const newStyle = rest.disabled ? [style, styles.disable] : style;
-    return <TouchableOpacity style={newStyle} activeOpacity={0.8} {...rest} />;
+    let throttleOnPress = undefined;
+    if (typeof onPress === 'function') {
+      throttleOnPress = useCallback(
+        _.throttle(onPress, 1000, {
+          leading: true,
+          trailing: false,
+        }),
+        [onPress],
+      );
+    }
+    return (
+      <TouchableOpacity
+        onPress={throttleOnPress}
+        style={newStyle}
+        activeOpacity={0.8}
+        {...rest}
+      />
+    );
   },
 );
 const styles = StyleSheet.create({

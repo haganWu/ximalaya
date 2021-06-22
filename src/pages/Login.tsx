@@ -44,6 +44,7 @@ class Login extends React.Component<Iprops> {
   };
 
   render() {
+    const {loading} = this.props;
     return (
       //keyboardShouldPersistTaps="handled" 切换多个输入框时,保持键盘处于唤醒状态
       /**
@@ -75,7 +76,10 @@ class Login extends React.Component<Iprops> {
                   component={Input}
                   secureTextEntry
                 />
-                <Touchable style={styles.loginTextBtn} onPress={handleSubmit}>
+                <Touchable
+                  disabled={loading}
+                  style={styles.loginTextBtn}
+                  onPress={handleSubmit}>
                   <Text style={styles.loginText}>登录</Text>
                 </Touchable>
               </View>
