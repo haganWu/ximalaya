@@ -11,7 +11,7 @@ interface IProps extends TextInputProps {
 
 class Input extends React.Component<IProps> {
   render() {
-    const {field, form, ...set} = this.props;
+    const {field, form, ...rest} = this.props;
     return (
       <View>
         <TextInput

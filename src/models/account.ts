@@ -3,7 +3,7 @@ import {Effect, Model, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import {goBack} from '@/utils/index';
 import storage, {load} from '@/config/storage';
-import {call} from 'react-native-reanimated';
+import Toast from 'react-native-root-toast';
 
 const ACCOUNT_URL = '/mock/11/hagan/login';
 
@@ -61,7 +61,13 @@ const accountModel: AccountModel = {
         });
         goBack();
       } else {
-        console.log(msg);
+        Toast.show(msg, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.CENTER,
+          shadow: true,
+          animation: true,
+        });
+        console.log(msg)
       }
     },
     *logout(_, {put}) {
