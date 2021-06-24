@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SceneRendererProps, TabBar, TabView} from 'react-native-tab-view';
 import Introduction from './Introduction';
 import List from '@/pages/Album/List/index';
@@ -14,6 +14,7 @@ import {
   TapGestureHandler,
 } from 'react-native-gesture-handler';
 import {IProgram} from '@/models/album';
+import {IProps} from 'react-native-linear-animated-gradient-transition';
 
 interface IRoute {
   key: string;
@@ -33,21 +34,23 @@ export interface ITabProps {
   onItemPress: (data: IProgram, index: number) => void;
 }
 
-class Tab extends React.Component<ITabProps, IState> {
-  state = {
-    routes: [
-      {key: 'introduction', title: '简介'},
-      {key: 'albums', title: '节目'},
-    ],
-    index: 1,
+function Tab(props: ITabProps) {
+  // const array = useState(state);
+  // const _state = array[0];
+  // const setState = array[1];
+  /**
+   * useState(initialState) 参数为state的初始值
+   */
+  const [routes] = useState([
+    {key: 'introduction', title: '简介'},
+    {key: 'albums', title: '节目'},
+  ]);
+  const [index, setIndex] = useState(1);
+  const onIndexChange = (index: number) => {
+    setIndex(index);
   };
-  onIndexChange = (index: number) => {
-    this.setState({
-      index,
-    });
-  };
-  renderScene = ({route}: {route: IRoute}) => {
-    const {panRef, tapRef, nativeRef, onScrollDrag, onItemPress} = this.props;
+  const renderScene = ({route}: {route: IRoute}) => {
+    const {panRef, tapRef, nativeRef, onScrollDrag, onItemPress} = props;
     switch (route.key) {
       case 'introduction':
         return <Introduction />;
@@ -64,7 +67,9 @@ class Tab extends React.Component<ITabProps, IState> {
     }
   };
 
-  renderTabBar = (props: SceneRendererProps & {navigationState: IState}) => {
+  const renderTabBar = (
+    props: SceneRendererProps & {navigationState: IState},
+  ) => {
     return (
       <TabBar
         {...props}
@@ -78,16 +83,14 @@ class Tab extends React.Component<ITabProps, IState> {
       />
     );
   };
-  render() {
-    return (
-      <TabView
-        navigationState={this.state}
-        onIndexChange={this.onIndexChange}
-        renderScene={this.renderScene}
-        renderTabBar={this.renderTabBar}
-      />
-    );
-  }
+  return (
+    <TabView
+      navigationState={{routes, index}}
+      onIndexChange={onIndexChange}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
