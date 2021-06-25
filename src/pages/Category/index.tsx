@@ -7,15 +7,12 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
-import CategoryItem, {
-  itemHeight,
-  margin,
-  itemWidth,
-  parentWidth,
-} from './CategoryItem';
+import CategoryItem, {itemHeight, margin, itemWidth} from './CategoryItem';
 import HeaderRightButton from './HeaderRightButton';
 import {DragSortableView} from 'react-native-drag-sort';
 import {viewportWidth} from '@/utils/index';
+import {useEffect} from 'react';
+import {useState} from 'react';
 
 /**
  * 从dva获取数据
@@ -35,53 +32,43 @@ interface IProps extends MadelState {
   navigation: RootStackNavigation;
 }
 
-/**
- * 保存用户临时选择的分类,待用户点击"完成"之后再将用户选择的分类报错值dva仓库
- */
-interface IState {
-  myCategories: ICategory[];
-}
-
 const fixedItems = [0, 1];
 
-class Category extends React.Component<IProps, IState> {
-  state = {
-    myCategories: this.props.myCategories,
-  };
+function Category(props: IProps) {
+  const [myCategories, setMyCategories] = useState(props.myCategories);
+  console.log('myCategories', myCategories);
+  const {dispatch, categories, navigation, isEdit} = props;
+  useEffect(() => {
+    const onSubmit = () => {
+      dispatch({
+        type: 'category/toogle',
+        payload: {
+          myCategories,
+        },
+      });
+      if (isEdit) {
+        navigation.goBack();
+      }
+    };
 
-  constructor(props: IProps) {
-    super(props);
-    props.navigation.setOptions({
-      headerRight: () => <HeaderRightButton onSubmit={this.onSubmit} />,
+    navigation.setOptions({
+      headerRight: () => <HeaderRightButton onSubmit={onSubmit} />,
     });
-  }
+  }, [dispatch, navigation, isEdit, myCategories]);
 
-  componentWillUnmount() {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'category/setState',
-      payload: {
-        isEdit: false,
-      },
-    });
-  }
+  useEffect(() => {
+    //清除副作用
+    return () => {
+      dispatch({
+        type: 'category/setState',
+        payload: {
+          isEdit: false,
+        },
+      });
+    };
+  }, [dispatch]);
 
-  onSubmit = () => {
-    const {dispatch, navigation, isEdit} = this.props;
-    const {myCategories} = this.state;
-    dispatch({
-      type: 'category/toogle',
-      payload: {
-        myCategories,
-      },
-    });
-    if (isEdit) {
-      navigation.goBack();
-    }
-  };
-
-  onLongPress = () => {
-    const {dispatch} = this.props;
+  const onLongPress = () => {
     dispatch({
       type: 'category/setState',
       payload: {
@@ -90,41 +77,32 @@ class Category extends React.Component<IProps, IState> {
     });
   };
 
-  onPress = (item: ICategory, index: number, isSelected: boolean) => {
-    const {isEdit} = this.props;
-    const {myCategories} = this.state;
+  const onPress = (item: ICategory, index: number, isSelected: boolean) => {
     if (isEdit) {
       if (isSelected) {
         const disable = fixedItems.indexOf(index) > -1;
         if (disable) {
           return;
         } else {
-          this.setState({
-            myCategories: myCategories.filter(
-              selectedItem => selectedItem.id !== item.id,
-            ),
-          });
+          setMyCategories(
+            myCategories.filter(selectedItem => selectedItem.id !== item.id),
+          );
         }
       } else {
-        this.setState({
-          myCategories: myCategories.concat([item]),
-        });
+        setMyCategories(myCategories.concat([item]));
       }
     }
   };
 
-  onDataChange = (data: ICategory[]) => {
-    this.setState({
-      myCategories: data,
-    });
+  const onDataChange = (data: ICategory[]) => {
+    setMyCategories(data);
   };
 
-  onClickItem = (data: ICategory[], item: ICategory) => {
-    this.onPress(item, data.indexOf(item), true);
+  const onClickItem = (data: ICategory[], item: ICategory) => {
+    onPress(item, data.indexOf(item), true);
   };
 
-  renderSelectedItem = (item: ICategory, index: number) => {
-    const {isEdit} = this.props;
+  const renderSelectedItem = (item: ICategory, index: number) => {
     const disable = fixedItems.indexOf(index) > -1;
     return (
       <CategoryItem
@@ -136,13 +114,12 @@ class Category extends React.Component<IProps, IState> {
       />
     );
   };
-  renderUnselectedItem = (item: ICategory, index: number) => {
-    const {isEdit} = this.props;
+  const renderUnselectedItem = (item: ICategory, index: number) => {
     return (
       <Touchable
         key={item.id}
-        onPress={() => this.onPress(item, index, false)}
-        onLongPress={this.onLongPress}>
+        onPress={() => onPress(item, index, false)}
+        onLongPress={onLongPress}>
         <CategoryItem
           data={item}
           disable={false}
@@ -153,56 +130,51 @@ class Category extends React.Component<IProps, IState> {
     );
   };
 
-  render() {
-    const {categories, isEdit} = this.props;
-    const {myCategories} = this.state;
-    const classifyGroup = _.groupBy(categories, item => item.classify);
-    return (
-      <ScrollView style={styles.container}>
-        <View>
-          <Text style={styles.classifyName}>我的分类</Text>
-          <View style={styles.classifyView}>
-            {/* {myCategories.map(this.renderSelectedItem)} */}
-            <DragSortableView
-              dataSource={myCategories}
-              fixedItems={fixedItems}
-              renderItem={this.renderSelectedItem}
-              sortable={isEdit}
-              keyExtractor={item => item.id}
-              onDataChange={this.onDataChange}
-              parentWidth={viewportWidth}
-              childrenWidth={itemWidth}
-              childrenHeight={itemHeight}
-              marginChildrenTop={margin}
-              onClickItem={this.onClickItem}
-            />
-          </View>
+  const classifyGroup = _.groupBy(categories, item => item.classify);
+  return (
+    <ScrollView style={styles.container}>
+      <View>
+        <Text style={styles.classifyName}>我的分类</Text>
+        <View style={styles.classifyView}>
+          <DragSortableView
+            dataSource={myCategories}
+            fixedItems={fixedItems}
+            renderItem={renderSelectedItem}
+            sortable={isEdit}
+            keyExtractor={item => item.id}
+            onDataChange={onDataChange}
+            parentWidth={viewportWidth}
+            childrenWidth={itemWidth}
+            childrenHeight={itemHeight}
+            marginChildrenTop={margin}
+            onClickItem={onClickItem}
+          />
         </View>
+      </View>
 
-        <View>
-          {Object.keys(classifyGroup).map(classify => {
-            return (
-              <View key={classify}>
-                <Text style={styles.classifyName}>{classify}</Text>
-                <View style={styles.classifyView}>
-                  {classifyGroup[classify].map((item, index) => {
-                    if (
-                      myCategories.find(
-                        selectedItem => selectedItem.id === item.id,
-                      )
-                    ) {
-                      return null;
-                    }
-                    return this.renderUnselectedItem(item, index);
-                  })}
-                </View>
+      <View>
+        {Object.keys(classifyGroup).map(classify => {
+          return (
+            <View key={classify}>
+              <Text style={styles.classifyName}>{classify}</Text>
+              <View style={styles.classifyView}>
+                {classifyGroup[classify].map((item, index) => {
+                  if (
+                    myCategories.find(
+                      selectedItem => selectedItem.id === item.id,
+                    )
+                  ) {
+                    return null;
+                  }
+                  return renderUnselectedItem(item, index);
+                })}
               </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-    );
-  }
+            </View>
+          );
+        })}
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({

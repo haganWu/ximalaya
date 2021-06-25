@@ -6,7 +6,9 @@ import {RootState} from '@/models/index';
 import {ModelStackNavigation, ModelStackParamList} from '@/navigator/index';
 import {randomIndex, viewportWidth} from '@/utils/index';
 import {RouteProp} from '@react-navigation/native';
-import React from 'react';
+import {functionsIn} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {useRef} from 'react';
 import {Animated, Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {connect, ConnectedProps} from 'react-redux';
@@ -56,23 +58,27 @@ interface IProps extends ModelState {
   navigation: ModelStackNavigation;
 }
 
-interface IState {
-  barrage: boolean;
-  barrageData: Message[];
-}
-
 const IMAGE_SIZE = 180;
 const PADDING_TOP = (viewportWidth - IMAGE_SIZE) / 2;
 const SCALE = viewportWidth / IMAGE_SIZE;
-class Detail extends React.Component<IProps, IState> {
-  state = {
-    barrage: false,
-    barrageData: [],
-  };
-  anim = new Animated.Value(1);
-  
-  componentDidMount() {
-    const {dispatch, route, navigation, title, id} = this.props;
+
+function Detail({
+  dispatch,
+  route,
+  navigation,
+  title,
+  id,
+  playState,
+  thumbnailUrl,
+  previousId,
+  nextId,
+}: IProps) {
+  const [barrage, setBarrage] = useState(false);
+  const [barrageData, setBarrageData] = useState<Message[]>([]);
+  //创建引用
+  const anim = useRef(new Animated.Value(1));
+
+  useEffect(() => {
     if (route.params && id !== route.params.id) {
       dispatch({
         type: 'player/fetchPlayer',
@@ -85,46 +91,41 @@ class Detail extends React.Component<IProps, IState> {
         type: 'player/play',
       });
     }
+  }, [route, dispatch, id]);
 
-    navigation.setOptions({
-      headerTitle: title,
-    });
-    this.addBarrage();
-  }
   /**
    * @description 解决点击上一首/下一首 标题不更新问题
    * @param prevProps
    */
-  componentDidUpdate(prevProps: IProps) {
-    if (this.props.title !== prevProps.title) {
-      this.props.navigation.setOptions({
-        headerTitle: this.props.title,
-      });
-    }
-  }
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: title,
+    });
+  }, [navigation, title]);
 
   /**
    * 添加弹幕
    */
-  addBarrage = () => {
+  useEffect(() => {
     //定时器  每隔1s钟执行一次
-    setInterval(() => {
-      const {barrage} = this.state;
+    const timmer = setInterval(() => {
       if (barrage) {
         const id = Date.now();
         const title = getText();
-        this.setState({
-          barrageData: [{id, title}],
-        });
+        setBarrageData([{id, title}]);
       }
     }, 200);
-  };
+
+    //当前组件卸载的时候调用
+    return () => {
+      clearInterval(timmer);
+    };
+  }, [barrage]);
 
   /**
    * 暂停/播放
    */
-  toggle = () => {
-    const {dispatch, playState} = this.props;
+  const toggle = () => {
     if (playState === 'playing') {
       dispatch({
         type: 'player/pause',
@@ -139,8 +140,7 @@ class Detail extends React.Component<IProps, IState> {
   /**
    * 上一首
    */
-  previousPress = () => {
-    const {dispatch} = this.props;
+  const previousPress = () => {
     dispatch({
       type: 'player/previoud',
     });
@@ -148,29 +148,28 @@ class Detail extends React.Component<IProps, IState> {
   /**
    * 下一首
    */
-  nextPress = () => {
-    const {dispatch} = this.props;
+  const nextPress = () => {
     dispatch({
       type: 'player/next',
     });
   };
 
-  /**
-   * 弹幕
-   */
-  barragePress = () => {
-    this.setState({
-      barrage: !this.state.barrage,
-    });
-    Animated.timing(this.anim, {
-      toValue: this.state.barrage ? 1 : SCALE,
+  useEffect(() => {
+    Animated.timing(anim.current, {
+      toValue: !barrage ? 1 : SCALE,
       duration: 1000,
       useNativeDriver: true,
     }).start();
+  }, [barrage]);
+
+  /**
+   * 弹幕
+   */
+  const barragePress = () => {
+    setBarrage(!barrage);
   };
 
-  skipProgress = (progress: number) => {
-    const {dispatch} = this.props;
+  const skipProgress = (progress: number) => {
     dispatch({
       type: 'player/skip',
       payload: {
@@ -179,61 +178,57 @@ class Detail extends React.Component<IProps, IState> {
     });
   };
 
-  render() {
-    const {barrage, barrageData} = this.state;
-    const {playState, thumbnailUrl, previousId, nextId} = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.imageView}>
-          <Animated.Image
-            style={[
-              styles.image,
-              {borderRadius: barrage ? 0 : 8},
-              {transform: [{scale: this.anim}]},
-            ]}
-            source={{uri: thumbnailUrl}}
+  return (
+    <View style={styles.container}>
+      <View style={styles.imageView}>
+        <Animated.Image
+          style={[
+            styles.image,
+            {borderRadius: barrage ? 0 : 8},
+            {transform: [{scale: anim.current}]},
+          ]}
+          source={{uri: thumbnailUrl}}
+        />
+      </View>
+
+      {barrage && (
+        <React.Fragment>
+          <LinearGradient
+            colors={['rgba(128,104,102,0.5)', '#807c66']}
+            style={styles.LinearGradient}
           />
-        </View>
+          <Barrage data={barrageData} maxTrack={5} style={styles.barrage} />
+        </React.Fragment>
+      )}
 
-        {barrage && (
-          <React.Fragment>
-            <LinearGradient
-              colors={['rgba(128,104,102,0.5)', '#807c66']}
-              style={styles.LinearGradient}
-            />
-            <Barrage data={barrageData} maxTrack={5} style={styles.barrage} />
-          </React.Fragment>
-        )}
+      <Touchable
+        style={styles.barrageBtn}
+        disabled={!previousId}
+        onPress={barragePress}>
+        <Text style={styles.barrageText}>弹幕</Text>
+      </Touchable>
 
-        <Touchable
-          style={styles.barrageBtn}
-          disabled={!previousId}
-          onPress={this.barragePress}>
-          <Text style={styles.barrageText}>弹幕</Text>
+      <PlaySlider skipProgress={skipProgress} />
+
+      <View style={styles.bottomContainer}>
+        <Touchable disabled={!previousId} onPress={previousPress}>
+          <IconFont name={'iconnext'} size={30} color="#fff" />
         </Touchable>
 
-        <PlaySlider skipProgress={this.skipProgress} />
+        <Touchable onPress={toggle}>
+          <IconFont
+            name={playState === 'playing' ? 'iconstop' : 'iconbofang2'}
+            size={30}
+            color="#fff"
+          />
+        </Touchable>
 
-        <View style={styles.bottomContainer}>
-          <Touchable disabled={!previousId} onPress={this.previousPress}>
-            <IconFont name={'iconnext'} size={30} color="#fff" />
-          </Touchable>
-
-          <Touchable onPress={this.toggle}>
-            <IconFont
-              name={playState === 'playing' ? 'iconstop' : 'iconbofang2'}
-              size={30}
-              color="#fff"
-            />
-          </Touchable>
-
-          <Touchable disabled={!nextId} onPress={this.nextPress}>
-            <IconFont name={'iconxiayishou'} size={30} color="#fff" />
-          </Touchable>
-        </View>
+        <Touchable disabled={!nextId} onPress={nextPress}>
+          <IconFont name={'iconxiayishou'} size={30} color="#fff" />
+        </Touchable>
       </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

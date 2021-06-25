@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   createMaterialTopTabNavigator,
-  MaterialTopTabBar,
   MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import Home from '@/pages/Home';
