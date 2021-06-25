@@ -1,7 +1,9 @@
 import {IFound} from '@/models/found';
 import React from 'react';
+import {useReducer} from 'react';
+import {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {FlatList, ListRenderItemInfo, Text, View} from 'react-native';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import Item from './Item';
 
@@ -16,59 +18,82 @@ interface IState {
   currentId: string;
 }
 
-class Found extends React.Component<IProps, IState> {
-  state = {
+enum ActionType {
+  LIST,
+  CURRENTID,
+}
+
+type IAction =
+  | {type: ActionType.LIST; list: IFound[]}
+  | {type: ActionType.CURRENTID; currentId: string};
+
+function reducer(state: IState, action: any) {
+  switch (action.type) {
+    case ActionType.LIST:
+      return {...state, list: action.list};
+    case ActionType.CURRENTID:
+      return {...state, currentId: action.currentId};
+    default:
+      return state;
+  }
+}
+
+function Found(props: IProps) {
+  const initState = {
     list: [],
     currentId: '',
   };
-  componentDidMount() {
-    const {dispatch} = this.props;
+
+  const [state, _dispatch] = useReducer(reducer, initState);
+
+  const {dispatch} = props;
+  useEffect(() => {
     dispatch({
       type: 'found/fetchList',
       callback: (data: IFound[]) => {
-        this.setState({
+        _dispatch({
+          type: ActionType.LIST,
           list: data,
         });
       },
     });
-  }
+  },[dispatch]);
 
-  setCurrentId = (id: string) => {
-    this.setState({
+  const setCurrentId = (id: string) => {
+    // this.setState({
+    //   currentId: id,
+    // });
+    _dispatch({
+      type: ActionType.CURRENTID,
       currentId: id,
     });
     if (id) {
-      const {dispatch} = this.props;
       dispatch({
         type: 'player/pause',
       });
     }
   };
 
-  renderItem = ({item}: ListRenderItemInfo<IFound>) => {
-    const paused = item.id !== this.state.currentId;
-    return (
-      <Item data={item} paused={paused} setCurrentId={this.setCurrentId} />
-    );
+  const renderItem = ({item}: ListRenderItemInfo<IFound>) => {
+    const paused = item.id !== state.currentId;
+    return <Item data={item} paused={paused} setCurrentId={setCurrentId} />;
   };
 
-  keyExtractor = (item: IFound) => {
+  const keyExtractor = (item: IFound) => {
     return item.id;
   };
 
-  render() {
-    const {list} = this.state;
-    return (
-      <View style={styles.view}>
-        <FlatList
-          data={list}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          extraData={this.state.currentId} //通过currentId值的变化刷新列表
-        />
-      </View>
-    );
-  }
+  const {list} = state;
+  return (
+    <View style={styles.view}>
+      <FlatList
+        data={list}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        extraData={state.currentId} //通过currentId值的变化刷新列表
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

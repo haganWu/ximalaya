@@ -56,6 +56,9 @@ function Category(props: IProps) {
     });
   }, [dispatch, navigation, isEdit, myCategories]);
 
+  /**
+   * 组件卸载的时候调用
+   */
   useEffect(() => {
     //清除副作用
     return () => {
