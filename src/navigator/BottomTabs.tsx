@@ -14,6 +14,7 @@ import IconFont from '@/assets/iconfont';
 import HomeTabs from './HomeTabs';
 import Play from '@/pages/views/Play';
 import Detail from '@/pages/Detail';
+import {useEffect} from 'react';
 
 export type BottomTabParamList = {
   HomeTabs: undefined;
@@ -66,17 +67,13 @@ interface IProps {
   navigation: RootStackNavigation;
   route: RouteProp<RootStackParamList, 'BottomTabs'>;
 }
-class BottomTabs extends React.Component<IProps> {
-  componentDidMount() {
-    this.setOptions();
-  }
+function BottomTabs(props: IProps) {
+  useEffect(() => {
+    setOptions();
+  });
 
-  componentDidUpdate() {
-    this.setOptions();
-  }
-
-  setOptions = () => {
-    const {navigation, route} = this.props;
+  const setOptions = () => {
+    const {navigation, route} = props;
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName === 'HomeTabs' || routeName === undefined) {
       navigation.setOptions({
@@ -91,69 +88,67 @@ class BottomTabs extends React.Component<IProps> {
     }
   };
 
-  render() {
-    return (
-      <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: '#f86442',
-        }}>
-        <Tab.Screen
-          name="HomeTabs"
-          component={HomeTabs}
-          options={{
-            title: '首页',
-            tabBarIcon: ({color, size}) => (
-              <IconFont name="iconshouye" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Listen"
-          component={Listen}
-          options={{
-            title: '我听',
-            tabBarIcon: ({color, size}) => (
-              <IconFont name="iconwoting" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Play"
-          component={Play}
-          options={({navigation}) => ({
-            title: '',
-            tabBarButton: () => {
-              return (
-                <Play
-                  maringTop={4}
-                  onPress={() => navigation.navigate('Detail')}
-                />
-              );
-            },
-          })}
-        />
-        <Tab.Screen
-          name="Found"
-          component={Found}
-          options={{
-            title: '发现',
-            tabBarIcon: ({color, size}) => (
-              <IconFont name="iconfaxian" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Account"
-          component={Account}
-          options={{
-            title: '账户',
-            tabBarIcon: ({color, size}) => (
-              <IconFont name="iconzhanghu" color={color} size={size} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    );
-  }
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#f86442',
+      }}>
+      <Tab.Screen
+        name="HomeTabs"
+        component={HomeTabs}
+        options={{
+          title: '首页',
+          tabBarIcon: ({color, size}) => (
+            <IconFont name="iconshouye" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Listen"
+        component={Listen}
+        options={{
+          title: '我听',
+          tabBarIcon: ({color, size}) => (
+            <IconFont name="iconwoting" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Play"
+        component={Play}
+        options={({navigation}) => ({
+          title: '',
+          tabBarButton: () => {
+            return (
+              <Play
+                maringTop={4}
+                onPress={() => navigation.navigate('Detail')}
+              />
+            );
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Found"
+        component={Found}
+        options={{
+          title: '发现',
+          tabBarIcon: ({color, size}) => (
+            <IconFont name="iconfaxian" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Account"
+        component={Account}
+        options={{
+          title: '账户',
+          tabBarIcon: ({color, size}) => (
+            <IconFont name="iconzhanghu" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
 export default BottomTabs;

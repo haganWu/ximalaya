@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   NavigationContainer,
   NavigationState,
@@ -29,6 +29,7 @@ import PlayView from '@/pages/views/PlayView';
 import {getActiveRouteName, navigationRef} from '../utils';
 import Login from '@/pages/Login';
 import SplashScreen from 'react-native-splash-screen';
+import {useState} from 'react';
 
 /**
  * 使用type约束泛型类型
@@ -206,81 +207,79 @@ function ModelStackScreen() {
 }
 
 let lastBackPressed = Date.now();
-class Navigator extends React.Component {
+
+function Navigator() {
   /**
    * 将routeName保存到state
    */
-  state = {
-    routeName: 'Root',
-  };
+  const [_routeName, setRouteName] = useState('Root');
 
-  componentDidMount() {
+  /**
+   * 第二个参数 []数组内的值变化一次,useEffect函数就执行一次,传递空数组表示只需要在Navigator第一次渲染的执行一次
+   */
+  useEffect(() => {
     SplashScreen.hide();
-    if (Platform.OS === 'android')
-      BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
-    AppState.addEventListener('change', this._onAppStateChanged);
-  }
-  componentWillUnmount() {
-    if (Platform.OS === 'android')
-      BackHandler.removeEventListener('hardwareBackPress', this._onBackPressed);
-    AppState.removeEventListener('change', this._onAppStateChanged);
-  }
+  });
 
-  _onBackPressed() {
-    if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
-      BackHandler.exitApp();
-    }
-    lastBackPressed = Date.now();
-    ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-    return true;
-  }
+  // componentDidMount() {
+  //   SplashScreen.hide();
+  //   if (Platform.OS === 'android')
+  //     BackHandler.addEventListener('hardwareBackPress', this._onBackPressed);
+  //   AppState.addEventListener('change', this._onAppStateChanged);
+  // }
+  // componentWillUnmount() {
+  //   if (Platform.OS === 'android')
+  //     BackHandler.removeEventListener('hardwareBackPress', this._onBackPressed);
+  //   AppState.removeEventListener('change', this._onAppStateChanged);
+  // }
 
-  _onAppStateChanged() {
-    switch (AppState.currentState) {
-      case 'active':
-        console.log('active');
-        break;
-      case 'background':
-        console.log('background');
-        break;
-      default:
-    }
-  }
+  // _onBackPressed() {
+  //   if (lastBackPressed && lastBackPressed + 2000 >= Date.now()) {
+  //     BackHandler.exitApp();
+  //   }
+  //   lastBackPressed = Date.now();
+  //   ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+  //   return true;
+  // }
+
+  // _onAppStateChanged() {
+  //   switch (AppState.currentState) {
+  //     case 'active':
+  //       console.log('active');
+  //       break;
+  //     case 'background':
+  //       console.log('background');
+  //       break;
+  //     default:
+  //   }
+  // }
 
   /**
    * 页面切换时回调
    */
-  onStateChange = (state: NavigationState | undefined) => {
+  const onStateChange = (state: NavigationState | undefined) => {
     if (typeof state !== 'undefined') {
       const routeName = getActiveRouteName(state);
-      console.log('routeName:', routeName);
       /**
        * 保存数据到state里面
        */
-      this.setState({
-        routeName,
-      });
+      setRouteName(routeName);
     }
   };
 
-  render() {
-    /**
-     * 从state里获取routeName
-     */
+  /**
+   * 从state里获取routeName
+   */
 
-    const {routeName} = this.state;
-    return (
-      /**
-       * 可通过ref属性得到NavigationContainer实例
-       */
-      <NavigationContainer
-        ref={navigationRef}
-        onStateChange={this.onStateChange}>
-        <ModelStackScreen />
-        <PlayView routeName={routeName} />
-      </NavigationContainer>
-    );
-  }
+  return (
+    /**
+     * 可通过ref属性得到NavigationContainer实例
+     */
+    <NavigationContainer ref={navigationRef} onStateChange={onStateChange}>
+      <ModelStackScreen />
+      <PlayView routeName={_routeName} />
+    </NavigationContainer>
+  );
 }
 
 /**
