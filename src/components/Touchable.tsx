@@ -12,18 +12,15 @@ import {useCallback} from 'react';
 // );
 
 const Touchable: React.FC<TouchableOpacityProps> = React.memo(
-  ({style, onPress, ...rest}) => {
+  ({style, onPress = () => {}, ...rest}) => {
     const newStyle = rest.disabled ? [style, styles.disable] : style;
-    let throttleOnPress = undefined;
-    if (typeof onPress === 'function') {
-      throttleOnPress = useCallback(
-        _.throttle(onPress, 1000, {
-          leading: true,
-          trailing: false,
-        }),
-        [onPress],
-      );
-    }
+    let throttleOnPress  = useCallback(
+      _.throttle(onPress, 1000, {
+        leading: true,
+        trailing: false,
+      }),
+      [onPress],
+    );
     return (
       <TouchableOpacity
         onPress={throttleOnPress}
