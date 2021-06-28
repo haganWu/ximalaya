@@ -1,5 +1,5 @@
 import {IFound} from '@/models/found';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useReducer} from 'react';
 import {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
@@ -57,27 +57,33 @@ function Found(props: IProps) {
         });
       },
     });
-  },[dispatch]);
+  }, [dispatch]);
 
-  const setCurrentId = (id: string) => {
-    // this.setState({
-    //   currentId: id,
-    // });
-    _dispatch({
-      type: ActionType.CURRENTID,
-      currentId: id,
-    });
-    if (id) {
-      dispatch({
-        type: 'player/pause',
+  const setCurrentId = useCallback(
+    (id: string) => {
+      // this.setState({
+      //   currentId: id,
+      // });
+      _dispatch({
+        type: ActionType.CURRENTID,
+        currentId: id,
       });
-    }
-  };
+      if (id) {
+        dispatch({
+          type: 'player/pause',
+        });
+      }
+    },
+    [_dispatch],
+  );
 
-  const renderItem = ({item}: ListRenderItemInfo<IFound>) => {
-    const paused = item.id !== state.currentId;
-    return <Item data={item} paused={paused} setCurrentId={setCurrentId} />;
-  };
+  const renderItem = useCallback(
+    ({item}: ListRenderItemInfo<IFound>) => {
+      const paused = item.id !== state.currentId;
+      return <Item data={item} paused={paused} setCurrentId={setCurrentId} />;
+    },
+    [state.currentId, setCurrentId],
+  );
 
   const keyExtractor = (item: IFound) => {
     return item.id;
