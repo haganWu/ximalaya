@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import CategoryItem, {itemHeight, margin, itemWidth} from './CategoryItem';
 import HeaderRightButton from './HeaderRightButton';
 import {DragSortableView} from 'react-native-drag-sort';
@@ -24,26 +24,26 @@ const mapStateToProps = ({category}: RootState) => {
     isEdit: category.isEdit,
   };
 };
-const connector = connect(mapStateToProps);
-
-type MadelState = ConnectedProps<typeof connector>;
-
-interface IProps extends MadelState {
+interface IProps {
   navigation: RootStackNavigation;
 }
 
 const fixedItems = [0, 1];
 
 function Category(props: IProps) {
-  const [myCategories, setMyCategories] = useState(props.myCategories);
-  console.log('myCategories', myCategories);
-  const {dispatch, categories, navigation, isEdit} = props;
+  const {myCategories, categories, isEdit} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
+  const dispatch = useDispatch();
+  const [_myCategories, setMyCategories] = useState(myCategories);
+  const {navigation} = props;
   useEffect(() => {
     const onSubmit = () => {
       dispatch({
         type: 'category/toogle',
         payload: {
-          myCategories,
+          myCategories: _myCategories,
         },
       });
       if (isEdit) {
@@ -54,7 +54,7 @@ function Category(props: IProps) {
     navigation.setOptions({
       headerRight: () => <HeaderRightButton onSubmit={onSubmit} />,
     });
-  }, [dispatch, navigation, isEdit, myCategories]);
+  }, [dispatch, navigation, isEdit, _myCategories]);
 
   /**
    * 组件卸载的时候调用
@@ -88,11 +88,11 @@ function Category(props: IProps) {
           return;
         } else {
           setMyCategories(
-            myCategories.filter(selectedItem => selectedItem.id !== item.id),
+            _myCategories.filter(selectedItem => selectedItem.id !== item.id),
           );
         }
       } else {
-        setMyCategories(myCategories.concat([item]));
+        setMyCategories(_myCategories.concat([item]));
       }
     }
   };
@@ -140,7 +140,7 @@ function Category(props: IProps) {
         <Text style={styles.classifyName}>我的分类</Text>
         <View style={styles.classifyView}>
           <DragSortableView
-            dataSource={myCategories}
+            dataSource={_myCategories}
             fixedItems={fixedItems}
             renderItem={renderSelectedItem}
             sortable={isEdit}
@@ -163,7 +163,7 @@ function Category(props: IProps) {
               <View style={styles.classifyView}>
                 {classifyGroup[classify].map((item, index) => {
                   if (
-                    myCategories.find(
+                    _myCategories.find(
                       selectedItem => selectedItem.id === item.id,
                     )
                   ) {
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(Category);
+export default Category;
