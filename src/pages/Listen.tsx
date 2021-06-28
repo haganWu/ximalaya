@@ -11,17 +11,20 @@ import realm, {ISaveProgram} from '@/config/realm';
 import IconFont from '@/assets/iconfont';
 import {formateDate, formatTime} from '../utils';
 import Touchable from '@/components/Touchable';
+import {useReducer} from 'react';
 
-class Listen extends React.Component {
-  onItemDelete = (item: ISaveProgram) => {
+function Listen() {
+  //使用hook 强制更新
+  const [ignored, forceUpdate] = useReducer(x => x + 1, []);
+  const onItemDelete = (item: ISaveProgram) => {
     realm.write(() => {
       realm.delete(realm.objects('Program').filtered(`id='${item.id}'`));
-      //重新渲染
-      this.setState({});
+      //重新渲染,强制更新
+      forceUpdate();
     });
   };
 
-  renderItem = ({item}: ListRenderItemInfo<ISaveProgram>) => {
+  const renderItem = ({item}: ListRenderItemInfo<ISaveProgram>) => {
     // let percentage = item.currentTime / item.duration;
     return (
       <View style={styles.itemContainer}>
@@ -46,7 +49,7 @@ class Listen extends React.Component {
         <Touchable
           style={styles.deleteBtn}
           onPress={() => {
-            this.onItemDelete(item);
+            onItemDelete(item);
           }}>
           <IconFont name="icontrash-gray" color="#999" />
         </Touchable>
@@ -54,30 +57,28 @@ class Listen extends React.Component {
     );
   };
 
-  keyExtractor = (item: ISaveProgram) => {
+  const keyExtractor = (item: ISaveProgram) => {
     return item.id;
   };
 
-  render() {
-    const programs = realm.objects<ISaveProgram>('Program');
-    if (programs.length > 0) {
-      return (
-        <View>
-          <FlatList
-            data={programs}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-            onEndReachedThreshold={0.2}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.empty}>
-          <Text style={styles.emptyText}>------暂无数据------</Text>
-        </View>
-      );
-    }
+  const programs = realm.objects<ISaveProgram>('Program');
+  if (programs.length > 0) {
+    return (
+      <View>
+        <FlatList
+          data={programs}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReachedThreshold={0.2}
+        />
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.empty}>
+        <Text style={styles.emptyText}>------暂无数据------</Text>
+      </View>
+    );
   }
 }
 
