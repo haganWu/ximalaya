@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Item from './Item';
 
@@ -77,57 +78,69 @@ function getTrackIndex(list: IBarrage[][], maxTrack: number) {
   }
   return -1;
 }
+/**
+ * 自定义hook函数
+ */
+function useDerivedState(cb: Function, data: any) {
+  //自定义hook函数中可以调用任意的其他hook函数
+  const [prevData, setPrevData] = useState<any>(null);
+  if (data !== prevData) {
+    cb();
+    setPrevData(data);
+  }
+}
 
-class Barrage extends React.Component<IProps, IState> {
-  state = {
-    data: this.props.data,
-    list: [this.props.data.map(item => ({...item, trackIndex: 0}))],
-  };
+function Barrage(props: IProps) {
+  const [list, setList] = useState(() => {
+    //传入函数,这个函数之后在Barrage函数第一次加载时执行
+    return [props.data.map(item => ({...item, trackIndex: 0}))];
+  });
+
+  useDerivedState(() => {
+    setList(addBarrage(props.data, props.maxTrack, list));
+  }, props.data);
+
+  // if (props.data !== data) {
+  //   setData(props.data);
+  //   setList(addBarrage(props.data, props.maxTrack, list));
+  // }
 
   /**
    * 从props里面获取数据然后更新state,在每次重新渲染的时候调用
    */
-  static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
-    const {data, maxTrack} = nextProps;
-    if (data != prevState.data) {
-      return {
-        data,
-        list: addBarrage(data, maxTrack, prevState.list),
-      };
-    }
-    return null;
-  }
+  // static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
+  //   const {data, maxTrack} = nextProps;
+  //   if (data != prevState.data) {
+  //     return {
+  //       data,
+  //       list: addBarrage(data, maxTrack, prevState.list),
+  //     };
+  //   }
+  //   return null;
+  // }
   /**
    * 删除已轮播完成的数据(通过动画执行完成回调监听已轮播完成的数据)
    * @param data 当前已轮播完成的数据
    */
-  outside = (data: IBarrage) => {
-    const {list} = this.state;
+  const outside = (data: IBarrage) => {
     const newList = list.slice(); //赋值数组
     if (newList.length > 0) {
       const {trackIndex} = data;
       newList[trackIndex] = newList[trackIndex].filter(
         item => item.id !== data.id,
       );
-      this.setState({
-        list: newList,
-      });
+      setList(newList);
     }
   };
 
-  renderItem = (item: IBarrage[], index: number) => {
+  const renderItem = (item: IBarrage[], index: number) => {
     return item.map((barrage, index) => {
-      return <Item key={barrage.id} data={barrage} outside={this.outside} />;
+      return <Item key={barrage.id} data={barrage} outside={outside} />;
     });
   };
 
-  render() {
-    const {list} = this.state;
-    const {style} = this.props; //从父组件拿到测style
-    return (
-      <View style={[styles.container, style]}>{list.map(this.renderItem)}</View>
-    );
-  }
+  const {style} = props; //从父组件拿到测style
+  return <View style={[styles.container, style]}>{list.map(renderItem)}</View>;
 }
 
 const styles = StyleSheet.create({
